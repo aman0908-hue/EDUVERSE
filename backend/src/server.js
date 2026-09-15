@@ -26,7 +26,16 @@ const app = express();
 // Render/Vercel jaise HTTPS proxies ke piche secure cookies ke liye zaroori
 app.set('trust proxy', 1);
 
-app.use(cors({ origin: process.env.FRONTEND_URL, credentials: true }));
+// CORS: FRONTEND_URL ke saath local dev variants bhi allow (127.0.0.1 vs localhost trap se bachne ke liye)
+const allowedOrigins = [...new Set([process.env.FRONTEND_URL, 'http://localhost:5173', 'http://127.0.0.1:5173'].filter(Boolean))];
+app.use(cors({
+    origin: (origin, callback) => {
+        // origin undefined ho to (curl / same-origin) allow
+        if (!origin || allowedOrigins.includes(origin)) return callback(null, true);
+        return callback(new Error(`CORS blocked: origin ${origin} allowed nahi hai`));
+    },
+    credentials: true
+}));
 app.use(express.json());
 app.use(cookieParser());
 

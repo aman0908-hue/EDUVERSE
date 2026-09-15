@@ -57,14 +57,16 @@ EduVerse/
 ## How to Run
 
 ### Prerequisites
-- Node.js v18+, MongoDB running on `localhost:27017`
+- Node.js v18+ — **local MongoDB ki zaroorat NAHI hai**, cloud MongoDB Atlas use hota hai
+- Ek MongoDB Atlas cluster + uska `MONGO_URL` (`.env` me already set hai)
+- **Zaroori:** apne current IP ko Atlas me whitelist karo → [cloud.mongodb.com](https://cloud.mongodb.com) → apna project → **Security → Network Access → ADD IP ADDRESS → "Allow Access From Anywhere"** (0.0.0.0/0). Iske bina TLS handshake pe hi connection reject ho jata hai.
 
 ### 1. Backend
 ```bash
 cd backend
 npm install
 cp .env-example .env          # PORT, MONGO_URL, JWT_SECRET, FRONTEND_URL...
-npm run dev                   # → http://localhost:4000
+npm run dev                   # → http://localhost:4000 (MongoDB Atlas cloud)
 ```
 
 ### 2. Frontend
