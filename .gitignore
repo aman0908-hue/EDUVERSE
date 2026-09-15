@@ -1,0 +1,18 @@
+# Dependencies
+node_modules/
+
+# Build output
+frontend/dist/
+
+# Environment files (keep .env-example committed)
+backend/.env
+frontend/.env
+frontend/src/.env
+
+# Uploads (user generated content)
+backend/uploads/*
+!backend/uploads/.gitkeep
+
+# OS / Editor junk
+.DS_Store
+*.log
