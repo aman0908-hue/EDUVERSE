@@ -78,6 +78,13 @@ app.use(errorMiddleware);
 
 const PORT = process.env.PORT || 4000;
 
-app.listen(PORT, () => {
-    console.log(`Server running in ${process.env.MODE} mode on port ${PORT}`);
-});
+// 🚀 NAYA: Vercel serverless functions me port nahi hota, isliye wahan listen() skip karo.
+// Local dev pe normal listen hoga. Vercel ke liye app neeche export kiya gaya hai (api/index.js).
+if (!process.env.VERCEL) {
+    app.listen(PORT, () => {
+        console.log(`Server running in ${process.env.MODE} mode on port ${PORT}`);
+    });
+}
+
+// 🚀 NAYA: Vercel serverless function ke liye Express app export (api/index.js isse use karta hai)
+export default app;

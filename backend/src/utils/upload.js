@@ -7,7 +7,11 @@ import path from 'path';
 // Saare file uploads yahi se manage honge
 // ============================================
 
-const uploadsDir = path.resolve('uploads');
+// 🚀 NAYA: Vercel serverless pe sirf /tmp writable hai (baaki filesystem read-only) —
+// uploads/ me likhne ki koshish pe mkdirSync crash kar deta. Isliye Vercel pe /tmp/uploads.
+// ⚠️ IMPORTANT: Vercel pe /tmp ephemeral hai — upload hui files function invocation ke
+// baad delete ho jati hain (persistent storage ke liye Cloudinary/S3 chahiye hoga).
+const uploadsDir = process.env.VERCEL ? '/tmp/uploads' : path.resolve('uploads');
 if (!fs.existsSync(uploadsDir)) {
     fs.mkdirSync(uploadsDir, { recursive: true });
 }
