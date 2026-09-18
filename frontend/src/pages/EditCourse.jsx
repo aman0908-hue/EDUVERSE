@@ -273,7 +273,7 @@ const EditCourse = () => {
                             <div className="dashboard-card" style={{ marginBottom: '30px', padding: '20px', border: '2px dashed #4f46e5', backgroundColor: '#eef2ff' }}>
                                 <h3 style={{ marginBottom: '5px', color: '#4f46e5' }}>➕ Quick Add Lesson</h3>
                                 <p style={{ fontSize: '0.85rem', color: '#6b7280', marginBottom: '15px' }}>
-                                    Video file upload karo, YouTube link paste karo, notes likho ya PDF attach karo — sab ek jagah se!
+                                    Upload a video file, paste a YouTube link, write notes, or attach a PDF — all in one place!
                                 </p>
                                 <form onSubmit={handleQuickAdd}>
                                     <div className="form-group">
@@ -292,8 +292,8 @@ const EditCourse = () => {
                                         </div>
                                     </div>
                                     <div className="form-group" style={{ marginTop: '12px' }}>
-                                        <label style={{ fontWeight: 'bold' }}>📝 Theory / Notes (optional — links bhi paste kar sakte ho)</label>
-                                        <textarea value={quickData.theoryContent} onChange={(e) => setQuickData({ ...quickData, theoryContent: e.target.value })} className="form-control" rows="3" placeholder="Lesson notes, explanation, ya koi bhi link..."></textarea>
+                                        <label style={{ fontWeight: 'bold' }}>📝 Theory / Notes (optional — you can paste links too)</label>
+                                        <textarea value={quickData.theoryContent} onChange={(e) => setQuickData({ ...quickData, theoryContent: e.target.value })} className="form-control" rows="3" placeholder="Lesson notes, explanation, or any link..."></textarea>
                                     </div>
                                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginTop: '12px' }}>
                                         <div className="form-group">
