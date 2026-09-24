@@ -16,3 +16,5 @@ backend/uploads/*
 # OS / Editor junk
 .DS_Store
 *.log
+.vercel
+.env*

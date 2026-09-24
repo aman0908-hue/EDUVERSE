@@ -9,6 +9,11 @@ const TRANSIENT_ERRORS = ['querySrv', 'ENOTFOUND', 'ETIMEDOUT', 'ECONNREFUSED', 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const connectDB = async () => {
+    // Serverless (Vercel) me connection reuse karna taaki redundant connection na bane
+    if (mongoose.connection && mongoose.connection.readyState >= 1) {
+        return;
+    }
+
     const maxRetries = 4; // total 5 attempts (1 initial + 4 retries)
 
     for (let attempt = 1; ; attempt++) {

@@ -4,6 +4,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import connectDB from './config/db.js';
 import path from 'path'; 
+import mongoose from 'mongoose';
 
 // --- ROUTES IMPORTS ---
 import authRoutes from './routes/authRoutes.js';
@@ -23,6 +24,18 @@ connectDB();
 
 const app = express();
 
+// Database connection ensure karne wala middleware (Vercel serverless cold starts ke liye)
+app.use(async (req, res, next) => {
+    try {
+        if (!mongoose.connection || mongoose.connection.readyState !== 1) {
+            await connectDB();
+        }
+        next();
+    } catch (err) {
+        next(err);
+    }
+});
+
 // Render/Vercel jaise HTTPS proxies ke piche secure cookies ke liye zaroori
 app.set('trust proxy', 1);
 
@@ -30,8 +43,10 @@ app.set('trust proxy', 1);
 const allowedOrigins = [...new Set([process.env.FRONTEND_URL, 'http://localhost:5173', 'http://127.0.0.1:5173'].filter(Boolean))];
 app.use(cors({
     origin: (origin, callback) => {
-        // origin undefined ho to (curl / same-origin) allow
-        if (!origin || allowedOrigins.includes(origin)) return callback(null, true);
+        // origin undefined ho to (curl / same-origin) allow, ya .vercel.app domain
+        if (!origin || allowedOrigins.includes(origin) || (typeof origin === 'string' && origin.endsWith('.vercel.app'))) {
+            return callback(null, true);
+        }
         return callback(new Error(`CORS blocked: origin ${origin} allowed nahi hai`));
     },
     credentials: true
@@ -43,9 +58,18 @@ app.use(cookieParser());
 // 🚀 SUPER FIX FOR VIDEO PLAYER (Black Screen)
 // ==========================================
 const __dirname = path.resolve();
-// Humne dono paths allow kar diye hain, taaki Frontend ka URL kuch bhi ho, video chal jaye!
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-app.use('/api/v1/uploads', express.static(path.join(__dirname, 'uploads')));
+const uploadFolder = process.env.VERCEL ? '/tmp/uploads' : path.join(__dirname, 'uploads');
+// Local project uploads directory fallback
+const localUploads = path.join(__dirname, 'uploads');
+if (process.env.VERCEL) {
+    app.use('/uploads', express.static(uploadFolder));
+    app.use('/uploads', express.static(localUploads));
+    app.use('/api/v1/uploads', express.static(uploadFolder));
+    app.use('/api/v1/uploads', express.static(localUploads));
+} else {
+    app.use('/uploads', express.static(uploadFolder));
+    app.use('/api/v1/uploads', express.static(uploadFolder));
+}
 
 
 // Health check API
