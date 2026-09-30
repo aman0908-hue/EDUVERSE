@@ -52,9 +52,7 @@ const CreateCourse = () => {
             if (trailerVideo) dataToSend.append('trailerVideo', trailerVideo);
 
             const loadingToast = toast.loading('Creating course...');
-            await api.post('/courses/create', dataToSend, {
-                headers: { 'Content-Type': 'multipart/form-data' }
-            });
+            await api.post('/courses/create', dataToSend);
             toast.dismiss(loadingToast);
             
             toast.success("Course created successfully! 🎉");

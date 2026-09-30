@@ -8,6 +8,20 @@ export const register = async (req, res) => {
     try {
         const { name, email, password, grade, applyForTeacher, qualification, experience, subject, reason, teachesGrades } = req.body;
 
+        const cleanEmail = String(email || '').trim().toLowerCase();
+        const cleanName = String(name || '').trim();
+        const cleanPassword = String(password || '');
+
+        if (!cleanName) {
+            return res.status(400).json({ message: "Full Name is required." });
+        }
+        if (!cleanEmail) {
+            return res.status(400).json({ message: "Email address is required." });
+        }
+        if (!cleanPassword || cleanPassword.length < 6) {
+            return res.status(400).json({ message: "Password must be at least 6 characters." });
+        }
+
         // 👨‍🏫 Teacher ke classes parse karna (FormData se JSON string aata hai)
         let teaches = [];
         if (typeof teachesGrades === 'string' && teachesGrades.trim()) {
@@ -19,19 +33,16 @@ export const register = async (req, res) => {
         const TEACH_GRADES = ['5', '6', '7', '8', '9', '10', '11', '12', 'UG'];
         teaches = [...new Set((teaches || []).map(String).filter(g => TEACH_GRADES.includes(g)))];
 
-        // Check karte hain ki user pehle se to nahi hai
-        const existingUser = await User.findOne({ email });
+        // Check karte hain ki user pehle se to nahi hai (case-insensitive)
+        const existingUser = await User.findOne({ 
+            email: { $regex: new RegExp(`^${cleanEmail.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')}$`, 'i') }
+        });
         if (existingUser) {
-            // YAHAN UPDATE KIYA HAI
-            return res.status(400).json({ message: "Email is already registered." }); 
-        }
-
-        if (!password || password.length < 6) {
-            return res.status(400).json({ message: "Password must be at least 6 characters." });
+            return res.status(400).json({ message: "Email is already registered. Please login instead." }); 
         }
 
         // Password ko encrypt (hash) karna security ke liye
-        const hashedPassword = await bcrypt.hash(password, 10);
+        const hashedPassword = await bcrypt.hash(cleanPassword, 10);
 
         // 🚀 Multer se aayi profile image ka filename save karna
         const profileImage = req.file ? req.file.filename : '';
@@ -39,8 +50,8 @@ export const register = async (req, res) => {
         // Database mein naya user save karna
         const GRADES = ['5', '6', '7', '8', '9', '10', '11', '12', 'UG'];
         const user = await User.create({
-            name,
-            email,
+            name: cleanName,
+            email: cleanEmail,
             password: hashedPassword,
             role: 'student',
             // 🎓 Student ka class — isi se use apne grade ke courses dikhenge
@@ -55,13 +66,12 @@ export const register = async (req, res) => {
         user.password = undefined;
 
         // Agar user ne teacher banne ki request ki hai to admin ke paas bhej do.
-        // Role abhi bhi 'student' hi rahega — admin approve karne par teacher banega.
         let requestCreated = false;
         if (applyForTeacher === 'true' || applyForTeacher === true) {
             await TeacherRequest.create({
                 user: user._id,
-                name,
-                email,
+                name: cleanName,
+                email: cleanEmail,
                 qualification: qualification || '',
                 experience: experience || '',
                 subject: subject || '',
@@ -72,6 +82,7 @@ export const register = async (req, res) => {
         }
 
         res.status(201).json({
+            success: true,
             message: requestCreated
                 ? 'Registration successful! Teacher request sent for admin approval.'
                 : 'Registration successful!',
@@ -80,7 +91,8 @@ export const register = async (req, res) => {
         });
 
     } catch (error) {
-        res.status(500).json({ message: 'Server Error' });
+        console.error("Register error:", error);
+        res.status(500).json({ success: false, message: 'Server Error during registration', error: error.message });
     }
 };
 
@@ -88,22 +100,28 @@ export const register = async (req, res) => {
 export const login = async (req, res) => {
     try {
         const { email, password } = req.body;
+        const cleanEmail = String(email || '').trim().toLowerCase();
+        const cleanPassword = String(password || '');
 
-        // User find karte hain
-        const user = await User.findOne({ email });
+        if (!cleanEmail || !cleanPassword) {
+            return res.status(400).json({ message: "Please enter both email and password." });
+        }
+
+        // Case-insensitive user lookup taaki purane/mixed-case users bhi smoothly match ho sakein
+        const user = await User.findOne({ 
+            email: { $regex: new RegExp(`^${cleanEmail.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')}$`, 'i') }
+        });
         if (!user) {
-            // YAHAN UPDATE KIYA HAI
             return res.status(404).json({ message: "User not found. Please register first." });
         }
 
-        if (!user || !user.isActive) {
+        if (!user.isActive) {
             return res.status(401).json({ message: 'This account is not active. Please contact the administrator.' });
         }
 
         // Password match karte hain
-        const isMatch = await bcrypt.compare(password, user.password);
+        const isMatch = await bcrypt.compare(cleanPassword, user.password);
         if (!isMatch) {
-            // YAHAN UPDATE KIYA HAI
             return res.status(400).json({ message: "Incorrect password. Please try again." });
         }
 
@@ -114,33 +132,36 @@ export const login = async (req, res) => {
             { expiresIn: '7d' }
         );
 
-        // Token ko HTTP Only Cookie mein save karna taaki secure rahe
-        // Production (Render + Vercel = alag domains) me cross-site cookie ke liye
-        // sameSite:'none' + secure:true zaroori hai, warna login kaam nahi karega
+        // Production environment check
+        const isProd = process.env.MODE === 'production' || process.env.NODE_ENV === 'production' || !!process.env.VERCEL;
+
+        // Token ko HTTP Only Cookie mein save karna
         res.cookie('token', token, {
             httpOnly: true,
             maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-            sameSite: process.env.MODE === 'production' ? 'none' : 'lax',
-            secure: process.env.MODE === 'production'
+            sameSite: isProd ? 'none' : 'lax',
+            secure: isProd
         });
 
         user.password = undefined;
-        res.status(200).json({ message: "Login successful!", token, user });
+        res.status(200).json({ success: true, message: "Login successful!", token, user });
 
     } catch (error) {
-        res.status(500).json({ message: "Server Error", error: error.message });
+        console.error("Login error:", error);
+        res.status(500).json({ success: false, message: "Server Error", error: error.message });
     }
 };
 
 // 3. Logout Route Logic (Cookie delete karna)
 export const logout = async (req, res) => {
+    const isProd = process.env.MODE === 'production' || process.env.NODE_ENV === 'production' || !!process.env.VERCEL;
     res.cookie('token', '', {
         httpOnly: true,
         expires: new Date(0),
-        sameSite: process.env.MODE === 'production' ? 'none' : 'lax',
-        secure: process.env.MODE === 'production'
+        sameSite: isProd ? 'none' : 'lax',
+        secure: isProd
     });
-    res.status(200).json({ message: "Logout successful!" });
+    res.status(200).json({ success: true, message: "Logout successful!" });
 };
 
 // 4. Get Current Logged-in User (Session persistence)

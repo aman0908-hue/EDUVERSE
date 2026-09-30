@@ -20,6 +20,8 @@ const Register = () => {
     const navigate = useNavigate();
     const { user, sessionChecked } = useContext(UserContext);
 
+    const [loading, setLoading] = useState(false);
+
     // 🚀 Agar pehle se logged-in hai toh register page ki jagah dashboard dikhao
     if (sessionChecked && user) {
         return <Navigate to={getRoleHome(user)} replace />;
@@ -30,34 +32,61 @@ const Register = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);
         try {
-            // FormData mein saari fields + profile image bhejni hai
-            const dataToSend = new FormData();
-            dataToSend.append('name', formData.name);
-            dataToSend.append('email', formData.email);
-            dataToSend.append('password', formData.password);
-            dataToSend.append('applyForTeacher', String(applyForTeacher));
-            if (applyForTeacher) {
-                dataToSend.append('qualification', teacherInfo.qualification);
-                dataToSend.append('experience', teacherInfo.experience);
-                dataToSend.append('subject', teacherInfo.subject);
-                dataToSend.append('reason', teacherInfo.reason);
-                // 👨‍🏫 Teacher kis class ke liye padhaata hai
-                dataToSend.append('teachesGrades', JSON.stringify(teacherInfo.teachesGrades));
-            }
-            if (profileImage) dataToSend.append('profileImage', profileImage);
+            const cleanName = formData.name.trim();
+            const cleanEmail = formData.email.trim().toLowerCase();
+            const cleanPassword = formData.password;
+            const cleanGrade = formData.grade || '10';
 
-            const response = await api.post('/auth/register', dataToSend, {
-                headers: { 'Content-Type': 'multipart/form-data' }
-            });
+            let response;
+            if (profileImage) {
+                // FormData mein saari fields + profile image (Axios automatically handles multipart boundary)
+                const dataToSend = new FormData();
+                dataToSend.append('name', cleanName);
+                dataToSend.append('email', cleanEmail);
+                dataToSend.append('password', cleanPassword);
+                dataToSend.append('grade', cleanGrade);
+                dataToSend.append('applyForTeacher', String(applyForTeacher));
+                if (applyForTeacher) {
+                    dataToSend.append('qualification', teacherInfo.qualification || '');
+                    dataToSend.append('experience', teacherInfo.experience || '');
+                    dataToSend.append('subject', teacherInfo.subject || '');
+                    dataToSend.append('reason', teacherInfo.reason || '');
+                    dataToSend.append('teachesGrades', JSON.stringify(teacherInfo.teachesGrades || []));
+                }
+                dataToSend.append('profileImage', profileImage);
+
+                response = await api.post('/auth/register', dataToSend);
+            } else {
+                // Image nahi hai toh clean JSON bhejte hain — boundary missing ya multipart parse error ka zero chance
+                const payload = {
+                    name: cleanName,
+                    email: cleanEmail,
+                    password: cleanPassword,
+                    grade: cleanGrade,
+                    applyForTeacher,
+                    ...(applyForTeacher ? {
+                        qualification: teacherInfo.qualification || '',
+                        experience: teacherInfo.experience || '',
+                        subject: teacherInfo.subject || '',
+                        reason: teacherInfo.reason || '',
+                        teachesGrades: teacherInfo.teachesGrades || []
+                    } : {})
+                };
+                response = await api.post('/auth/register', payload);
+            }
+
             if (response.data.requestCreated) {
                 toast.success('Account created! Teacher request sent to admin.', { duration: 5000 });
             } else {
-                toast.success(response.data.message || 'Registration successful!');
+                toast.success(response.data.message || 'Registration successful! Please login.');
             }
             navigate('/login');
         } catch (error) {
-            toast.error(error.response?.data?.message || 'Registration failed');
+            toast.error(error.response?.data?.message || 'Registration failed. Please try again.');
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -178,8 +207,8 @@ const Register = () => {
                         <input type="file" accept="image/*" onChange={handleFileChange} className="form-input" />
                     </div>
 
-                    <button type="submit" className="btn btn-primary">
-                        {applyForTeacher ? 'Register & Send Request' : 'Register Now'}
+                    <button type="submit" className="btn btn-primary" disabled={loading}>
+                        {loading ? 'Creating Account...' : (applyForTeacher ? 'Register & Send Request' : 'Register Now')}
                     </button>
                 </form>
 

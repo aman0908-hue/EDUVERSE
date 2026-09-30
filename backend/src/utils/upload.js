@@ -18,7 +18,13 @@ if (!fs.existsSync(uploadsDir)) {
 
 // Common disk storage: file uploads/ folder mein unique naam se save hogi
 const diskStorage = multer.diskStorage({
-    destination: (req, file, cb) => cb(null, uploadsDir),
+    destination: (req, file, cb) => {
+        const targetDir = process.env.VERCEL ? '/tmp/uploads' : path.resolve('uploads');
+        if (!fs.existsSync(targetDir)) {
+            try { fs.mkdirSync(targetDir, { recursive: true }); } catch (_) {}
+        }
+        cb(null, targetDir);
+    },
     filename: (req, file, cb) => cb(null, `${Date.now()}-${file.originalname.replace(/\s+/g, '-')}`)
 });
 

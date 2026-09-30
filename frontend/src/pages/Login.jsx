@@ -26,15 +26,26 @@ const Login = () => {
         e.preventDefault();
         setLoading(true);
         try {
-            const response = await api.post('/auth/login', formData);
-            if (response.data.success || response.data.message === "Login successful!") {
-                setUser(response.data.user);
+            const cleanEmail = formData.email.trim().toLowerCase();
+            const response = await api.post('/auth/login', {
+                email: cleanEmail,
+                password: formData.password
+            });
+            if (response.data.token || response.data.user || response.data.success || response.data.message === "Login successful!") {
+                if (response.data.token) {
+                    localStorage.setItem('token', response.data.token);
+                }
+                if (response.data.user) {
+                    localStorage.setItem('user', JSON.stringify(response.data.user));
+                    setUser(response.data.user);
+                }
                 toast.success("Login successful!");
-                
                 navigate(getRoleHome(response.data.user));
+            } else {
+                toast.error(response.data.message || "Login failed");
             }
         } catch (error) {
-            toast.error(error.response?.data?.message || "Login failed. Please try again.");
+            toast.error(error.response?.data?.message || "Login failed. Please check your credentials.");
         } finally {
             setLoading(false);
         }

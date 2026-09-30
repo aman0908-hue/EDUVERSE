@@ -17,13 +17,15 @@ const Header = ({ subtitle }) => {
 
     const getInitial = () => (user?.name ? user.name.charAt(0).toUpperCase() : '?');
 
-    // Logout: backend cookie clear + context clear
+    // Logout: backend cookie clear + context clear + token clear
     const handleLogout = async () => {
         try {
             await api.post('/auth/logout');
         } catch (error) {
             // Logout API fail ho toh bhi local logout karo
         }
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
         setUser(null);
         toast.success('Logged out successfully');
         navigate('/login');

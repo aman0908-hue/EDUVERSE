@@ -65,9 +65,7 @@ const LessonEditor = ({ lesson, allChapters = [], onClose, onUpdated, onDeleted 
             if (attachment) fd.append('attachmentFile', attachment);
 
             const loadingToast = toast.loading('Saving changes...');
-            const res = await api.put(`/lessons/${lesson._id}`, fd, {
-                headers: { 'Content-Type': 'multipart/form-data' }
-            });
+            const res = await api.put(`/lessons/${lesson._id}`, fd);
             toast.dismiss(loadingToast);
             toast.success('Lesson update ho gaya! ✅');
             onUpdated?.(res.data.lesson || res.data.lecture);

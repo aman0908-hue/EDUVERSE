@@ -27,4 +27,20 @@ const api = axios.create({
     withCredentials: true // Ye zaroori hai taaki cookies (token) backend tak ja sakein
 });
 
+// 🚀 Request Interceptor: LocalStorage me token ho to Authorization header me bhejo
+// Isse agar browser cookies block kare (Safari, Chrome Incognito, etc.) toh bhi user logged-in rahega
+api.interceptors.request.use(
+    (config) => {
+        try {
+            const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+            if (token) {
+                config.headers = config.headers || {};
+                config.headers.Authorization = `Bearer ${token}`;
+            }
+        } catch (_) {}
+        return config;
+    },
+    (error) => Promise.reject(error)
+);
+
 export default api;

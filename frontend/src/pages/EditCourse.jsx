@@ -104,9 +104,7 @@ const EditCourse = () => {
             if (metaThumbnail) dataToSend.append('thumbnail', metaThumbnail);
             if (metaTrailer) dataToSend.append('trailerVideo', metaTrailer);
 
-            const res = await api.put('/courses/update', dataToSend, {
-                headers: { 'Content-Type': 'multipart/form-data' }
-            });
+            const res = await api.put('/courses/update', dataToSend);
             toast.success(res.data.message || 'Course details updated!');
             setMetaThumbnail(null);
             setMetaTrailer(null);
@@ -181,7 +179,7 @@ const EditCourse = () => {
             if (quickVideo) dataToSend.append('videoFile', quickVideo);
 
             const loadingToast = toast.loading('Uploading lesson & files...');
-            const response = await api.post('/lessons/add', dataToSend, { headers: { 'Content-Type': 'multipart/form-data' } });
+            const response = await api.post('/lessons/add', dataToSend);
             toast.dismiss(loadingToast);
             toast.success('Lesson added successfully! 🎉');
             setLessons([...lessons, response.data.lesson]);
@@ -219,7 +217,7 @@ const EditCourse = () => {
             if (videoFile) dataToSend.append('videoFile', videoFile); 
 
             const loadingToast = toast.loading("Uploading lesson & files...");
-            const response = await api.post('/lessons/add', dataToSend, { headers: { 'Content-Type': 'multipart/form-data' } });
+            const response = await api.post('/lessons/add', dataToSend);
             
             toast.dismiss(loadingToast);
             toast.success("Lesson added successfully!");
@@ -277,7 +275,7 @@ const EditCourse = () => {
             fd.append('materialFile', input.files[0]);
             try {
                 const loadingToast = toast.loading('Uploading material...');
-                const res = await api.post('/lessons/materials', fd, { headers: { 'Content-Type': 'multipart/form-data' } });
+                const res = await api.post('/lessons/materials', fd);
                 toast.dismiss(loadingToast);
                 toast.success('Study material added! 📎');
                 setLessons(lessons.map(l => l._id === lessonId ? res.data.lecture : l));

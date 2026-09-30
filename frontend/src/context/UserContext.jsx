@@ -22,17 +22,29 @@ export const UserProvider = ({ children }) => {
     }, [user]);
 
     // 🚀 3. REQUIREMENT: Persistent session via GET /auth/me on page reload
-    // Cookie se server verify karega ki user sach mein logged in hai
     useEffect(() => {
         const restoreSession = async () => {
+            const token = localStorage.getItem('token');
+            const storedUser = localStorage.getItem('user');
+
+            // Agar token aur user dono nahi hain, toh verification ki zaroorat nahi
+            if (!token && !storedUser) {
+                setUser(null);
+                setSessionChecked(true);
+                return;
+            }
+
             try {
                 const res = await api.get('/auth/me');
                 if (res.data?.user) {
                     setUser(res.data.user);
+                    localStorage.setItem('user', JSON.stringify(res.data.user));
                 }
             } catch (error) {
-                // 401 = cookie expired/invalid. localStorage user ko hata do (stale session)
+                // 401 = cookie/token expired ya invalid. Stale session hatao
                 if (error.response && error.response.status === 401) {
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('user');
                     setUser(null);
                 }
             } finally {
@@ -42,8 +54,14 @@ export const UserProvider = ({ children }) => {
         restoreSession();
     }, []);
 
+    const logout = () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        setUser(null);
+    };
+
     return (
-        <UserContext.Provider value={{ user, setUser, sessionChecked }}>
+        <UserContext.Provider value={{ user, setUser, sessionChecked, logout }}>
             {children}
         </UserContext.Provider>
     );
