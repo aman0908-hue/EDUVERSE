@@ -6,26 +6,36 @@ export const UserContext = createContext(null);
 export const UserProvider = ({ children }) => {
     // 1. Page load hone par check karna ki kya user pehle se login tha
     const [user, setUser] = useState(() => {
-        const storedUser = localStorage.getItem('user');
-        return storedUser ? JSON.parse(storedUser) : null;
+        try {
+            const storedUser = localStorage.getItem('user');
+            return storedUser ? JSON.parse(storedUser) : null;
+        } catch (_) {
+            return null;
+        }
     });
     // 🚀 /auth/me session-restore complete hua ya nahi (route guards ke liye)
     const [sessionChecked, setSessionChecked] = useState(false);
 
     // 2. Jab bhi user change ho (login/logout), use localStorage mein save/remove karna
     useEffect(() => {
-        if (user) {
-            localStorage.setItem('user', JSON.stringify(user));
-        } else {
-            localStorage.removeItem('user');
-        }
+        try {
+            if (user) {
+                localStorage.setItem('user', JSON.stringify(user));
+            } else {
+                localStorage.removeItem('user');
+            }
+        } catch (_) {}
     }, [user]);
 
     // 🚀 3. REQUIREMENT: Persistent session via GET /auth/me on page reload
     useEffect(() => {
         const restoreSession = async () => {
-            const token = localStorage.getItem('token');
-            const storedUser = localStorage.getItem('user');
+            let token = null;
+            let storedUser = null;
+            try {
+                token = localStorage.getItem('token');
+                storedUser = localStorage.getItem('user');
+            } catch (_) {}
 
             // Agar token aur user dono nahi hain, toh verification ki zaroorat nahi
             if (!token && !storedUser) {
@@ -38,13 +48,15 @@ export const UserProvider = ({ children }) => {
                 const res = await api.get('/auth/me');
                 if (res.data?.user) {
                     setUser(res.data.user);
-                    localStorage.setItem('user', JSON.stringify(res.data.user));
+                    try { localStorage.setItem('user', JSON.stringify(res.data.user)); } catch (_) {}
                 }
             } catch (error) {
                 // 401 = cookie/token expired ya invalid. Stale session hatao
                 if (error.response && error.response.status === 401) {
-                    localStorage.removeItem('token');
-                    localStorage.removeItem('user');
+                    try {
+                        localStorage.removeItem('token');
+                        localStorage.removeItem('user');
+                    } catch (_) {}
                     setUser(null);
                 }
             } finally {
@@ -55,8 +67,10 @@ export const UserProvider = ({ children }) => {
     }, []);
 
     const logout = () => {
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
+        try {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+        } catch (_) {}
         setUser(null);
     };
 
