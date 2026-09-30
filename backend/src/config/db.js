@@ -8,16 +8,29 @@ const TRANSIENT_ERRORS = ['querySrv', 'ENOTFOUND', 'ETIMEDOUT', 'ECONNREFUSED', 
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
+// Serverless (Vercel) me ek hi module memory hoti hai, lekin do requests ek saath
+// aa sakte hain. Bina ek shared promise ke, dono apna alag mongoose.connect()
+// chalate hain — ek connection beech me mongoose readyState ko disturb karta hai
+// aur dusra request adhoora/empty result padh leta hai (jaise login ke waqt
+// "User not found"). Isliye in-flight connection ko share karte hain.
+let connectionPromise = null;
+
 const connectDB = async () => {
     // Serverless (Vercel) me connection reuse karna taaki redundant connection na bane
     if (mongoose.connection && mongoose.connection.readyState >= 1) {
         return;
     }
 
+    // Already connect ho raha hai ya connect hone wala hai — usi ka wait karo
+    if (connectionPromise) {
+        return connectionPromise;
+    }
+
     const maxRetries = 4; // total 5 attempts (1 initial + 4 retries)
 
-    for (let attempt = 1; ; attempt++) {
-        try {
+    connectionPromise = (async () => {
+        for (let attempt = 1; ; attempt++) {
+            try {
             const conn = await mongoose.connect(process.env.MONGO_URL);
             console.log(`MongoDB Connected: ${conn.connection.host}`);
             return;
@@ -51,6 +64,16 @@ const connectDB = async () => {
             console.warn(`   ${attempt * 2}s baad dobara try kar raha hoon...`);
             await sleep(attempt * 2000);
         }
+        }
+    })();
+
+    try {
+        return await connectionPromise;
+    } catch (error) {
+        // Connection fail hui to shared promise reset karo, taaki agla request
+        // fresh attempt kar sake (stale rejected promise reuse na ho).
+        connectionPromise = null;
+        throw error;
     }
 };
 
