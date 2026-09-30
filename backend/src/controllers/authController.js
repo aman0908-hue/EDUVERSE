@@ -1,11 +1,23 @@
 import User from '../models/User.js';
+import TeacherRequest from '../models/TeacherRequest.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
 // 1. Register Route Logic (Naya account banana, profile image upload ke sath)
 export const register = async (req, res) => {
     try {
-        const { name, email, password, role } = req.body;
+        const { name, email, password, grade, applyForTeacher, qualification, experience, subject, reason, teachesGrades } = req.body;
+
+        // 👨‍🏫 Teacher ke classes parse karna (FormData se JSON string aata hai)
+        let teaches = [];
+        if (typeof teachesGrades === 'string' && teachesGrades.trim()) {
+            try { teaches = JSON.parse(teachesGrades); }
+            catch { teaches = teachesGrades.split(',').map(s => s.trim()); }
+        } else if (Array.isArray(teachesGrades)) {
+            teaches = teachesGrades;
+        }
+        const TEACH_GRADES = ['5', '6', '7', '8', '9', '10', '11', '12', 'UG'];
+        teaches = [...new Set((teaches || []).map(String).filter(g => TEACH_GRADES.includes(g)))];
 
         // Check karte hain ki user pehle se to nahi hai
         const existingUser = await User.findOne({ email });
@@ -25,20 +37,50 @@ export const register = async (req, res) => {
         const profileImage = req.file ? req.file.filename : '';
 
         // Database mein naya user save karna
+        const GRADES = ['5', '6', '7', '8', '9', '10', '11', '12', 'UG'];
         const user = await User.create({
             name,
             email,
             password: hashedPassword,
-            role,
+            role: 'student',
+            // 🎓 Student ka class — isi se use apne grade ke courses dikhenge
+            grade: GRADES.includes(String(grade || '')) ? String(grade) : 'All',
+            // 👨‍🏫 Teacher kis class ke liye padhata hai
+            teachesGrades: applyForTeacher ? teaches : [],
+            isActive: true,
             profileImage
         });
 
         // Response bhejte hain (password hata kar)
         user.password = undefined;
-        res.status(201).json({ message: "Registration successful!", user });
+
+        // Agar user ne teacher banne ki request ki hai to admin ke paas bhej do.
+        // Role abhi bhi 'student' hi rahega — admin approve karne par teacher banega.
+        let requestCreated = false;
+        if (applyForTeacher === 'true' || applyForTeacher === true) {
+            await TeacherRequest.create({
+                user: user._id,
+                name,
+                email,
+                qualification: qualification || '',
+                experience: experience || '',
+                subject: subject || '',
+                reason: reason || '',
+                status: 'pending'
+            });
+            requestCreated = true;
+        }
+
+        res.status(201).json({
+            message: requestCreated
+                ? 'Registration successful! Teacher request sent for admin approval.'
+                : 'Registration successful!',
+            user,
+            requestCreated
+        });
 
     } catch (error) {
-        res.status(500).json({ message: "Server Error", error: error.message });
+        res.status(500).json({ message: 'Server Error' });
     }
 };
 
@@ -52,6 +94,10 @@ export const login = async (req, res) => {
         if (!user) {
             // YAHAN UPDATE KIYA HAI
             return res.status(404).json({ message: "User not found. Please register first." });
+        }
+
+        if (!user || !user.isActive) {
+            return res.status(401).json({ message: 'This account is not active. Please contact the administrator.' });
         }
 
         // Password match karte hain

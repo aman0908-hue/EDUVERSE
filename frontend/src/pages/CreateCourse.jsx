@@ -3,6 +3,8 @@ import { useNavigate, Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import api from '../utils/api.js';
 import { UserContext } from '../context/UserContext.jsx';
+import ScheduleEditor from '../components/ScheduleEditor.jsx';
+import { GRADE_OPTIONS, COURSE_LANGUAGES, CATEGORIES } from '../components/timetableLogic.js';
 
 const CreateCourse = () => {
     const { user } = useContext(UserContext);
@@ -12,12 +14,18 @@ const CreateCourse = () => {
         title: '',
         description: '',
         category: '',
+        grade: '10',
+        courseLanguage: '',
         language: 'English',
         level: 'Beginner',
         price: '',
         requirements: '',
         learningOutcomes: ''
     });
+
+    // 📅 Class schedule — array of slots, ise JSON string ke roop me bhejenge
+    const [schedule, setSchedule] = useState([]);
+    const [scheduleNote, setScheduleNote] = useState('');
 
     // 🚀 NAYA: Thumbnail + Trailer video uploads (Requirement 3.2)
     const [thumbnail, setThumbnail] = useState(null);
@@ -37,6 +45,9 @@ const CreateCourse = () => {
             const dataToSend = new FormData();
             Object.keys(formData).forEach(key => dataToSend.append(key, formData[key]));
             dataToSend.append('instructor', user._id);
+            // Schedule array ko JSON string bana kar bhejte hain
+            dataToSend.append('schedule', JSON.stringify(schedule));
+            dataToSend.append('scheduleNote', scheduleNote);
             if (thumbnail) dataToSend.append('thumbnail', thumbnail);
             if (trailerVideo) dataToSend.append('trailerVideo', trailerVideo);
 
@@ -74,14 +85,36 @@ const CreateCourse = () => {
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '15px' }}>
                         <div className="form-group">
                             <label style={{ fontWeight: 'bold', marginBottom: '8px', display: 'block' }}>Category</label>
-                            <select name="category" required onChange={handleChange} className="form-control" style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #d1d5db' }}>
+                            <select name="category" value={formData.category} required onChange={handleChange} className="form-control" style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #d1d5db' }}>
                                 <option value="">Select Category</option>
-                                <option value="Programming">Programming</option>
-                                <option value="Design">Design</option>
-                                <option value="Marketing">Marketing</option>
-                                <option value="Business">Business</option>
+                                {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
                             </select>
                         </div>
+                        <div className="form-group">
+                            {/* 🎓 Course kis class ke liye hai — students filter yahi se karte hain */}
+                            <label style={{ fontWeight: 'bold', marginBottom: '8px', display: 'block' }}>For which class?</label>
+                            <select name="grade" value={formData.grade} onChange={handleChange} className="form-control" style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #d1d5db' }}>
+                                {GRADE_OPTIONS.map(g => <option key={g} value={g}>{g === 'All' ? 'All classes' : g === 'UG' ? 'UG (College)' : `Class ${g}`}</option>)}
+                            </select>
+                            <small className="form-hint">Only students of this class will see this course.</small>
+                        </div>
+                        {/* 🌍 Language category chunne par language ka dropdown aata hai */}
+                        {formData.category === 'Language' && (
+                            <div className="form-group">
+                                <label style={{ fontWeight: 'bold', marginBottom: '8px', display: 'block' }}>Which language?</label>
+                                <select
+                                    name="courseLanguage"
+                                    value={formData.courseLanguage}
+                                    onChange={handleChange}
+                                    className="form-control"
+                                    style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #d1d5db' }}
+                                >
+                                    <option value="">Select Language</option>
+                                    {COURSE_LANGUAGES.map(l => <option key={l} value={l}>{l}</option>)}
+                                </select>
+                                <small className="form-hint">This course teaches the language you pick here.</small>
+                            </div>
+                        )}
 
                         <div className="form-group">
                             <label style={{ fontWeight: 'bold', marginBottom: '8px', display: 'block' }}>Language</label>
@@ -119,6 +152,16 @@ const CreateCourse = () => {
                             <label style={{ fontWeight: 'bold', marginBottom: '8px', display: 'block' }}>Learning Outcomes (one per line)</label>
                             <textarea name="learningOutcomes" placeholder={'e.g.\nBuild full-stack apps\nMaster React fundamentals'} onChange={handleChange} className="form-control" rows="3" style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #d1d5db', resize: 'none' }}></textarea>
                         </div>
+                    </div>
+
+                    {/* 📅 Class schedule — AI "kab hai class" ka jawab yahin se deta hai */}
+                    <div className="form-group">
+                        <ScheduleEditor
+                            value={schedule}
+                            onChange={setSchedule}
+                            note={scheduleNote}
+                            onNoteChange={setScheduleNote}
+                        />
                     </div>
 
                     {/* 🚀 NAYA: Thumbnail + Trailer uploads */}

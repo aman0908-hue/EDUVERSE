@@ -15,6 +15,22 @@ const lessonSchema = new mongoose.Schema({
         type: String,
         default: '' 
     },
+    // 📺 Topic — is lesson me kya padhaya gaya. Quiz isi topic se banegi.
+    topic: {
+        type: String,
+        default: ''
+    },
+    // 🔴 LIVE CLASS LINK — teacher Google Meet / Zoom ka link yahan paste karta hai.
+    //    Student is lesson ke button se seedha live class me chala jayega.
+    liveLink: {
+        type: String,
+        default: ''
+    },
+    // 🔴 Live class kab hai (optional) — "Daily 6 PM" jaisi free text
+    liveTime: {
+        type: String,
+        default: ''
+    },
     videoFile: {
         type: String,
         default: '' 

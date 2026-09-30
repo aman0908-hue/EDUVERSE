@@ -1,10 +1,13 @@
 import { useState, useEffect, useContext } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import api from '../utils/api.js';
+import api, { assetUrl, apiOrigin } from '../utils/api.js';
 import { UserContext } from '../context/UserContext.jsx';
 import Header from '../components/Header.jsx';
 import Footer from '../components/Footer.jsx';
+// NOTE: intentionally aliased as ClassTimetable so that every existing
+// <ClassTimetable /> usage in the pages is gated without touching those files.
+import ClassTimetable from '../components/GatedClassTimetable.jsx';
 
 // 🚀 REQUIREMENT 3.4: View detailed course info and enroll
 const CourseDetail = () => {
@@ -45,12 +48,19 @@ const CourseDetail = () => {
                 setChapters(chaptersMap);
                 setTotalLessons(lessonCount);
 
-                // 3. Join status (sirf logged-in student ke liye)
-                if (user && user.role === 'student') {
+                // 3. Join status — checked for ANY logged-in user.
+                //    Previously it only ran for role === 'student', so teachers
+                //    and admins were always shown the "Enroll Now" button.
+                if (user) {
                     try {
                         const joinedRes = await api.get(`/courses/is-student-joined/${id}`);
-                        setJoined(joinedRes.data.joined);
-                    } catch (err) { /* ignore */ }
+                        setJoined(!!joinedRes.data.joined);
+                    } catch (err) {
+                        // 401 means the session expired; the useEffect re-runs on user change
+                        console.log('Join status check skipped:', err?.response?.status);
+                    }
+                } else {
+                    setJoined(false);
                 }
             } catch (error) {
                 toast.error('Failed to load course');
@@ -70,7 +80,7 @@ const CourseDetail = () => {
         }
         setEnrolling(true);
         try {
-            await api.post('/enrollement/join', { courseId: id });
+            await api.post('/enrollement/join', { courseId: id, studentId: user._id });
             toast.success('Enrolled successfully! 🎉');
             setJoined(true);
         } catch (error) {
@@ -101,7 +111,7 @@ const CourseDetail = () => {
         );
     }
 
-    const thumbnailUrl = course.thumbnail ? `${import.meta.env.VITE_API_URL}/uploads/${course.thumbnail}` : null;
+    const thumbnailUrl = course.thumbnail ? assetUrl(course.thumbnail) : null;
 
     return (
         <div style={{ minHeight: '100vh', backgroundColor: 'var(--bg-color)', display: 'flex', flexDirection: 'column' }}>
@@ -124,6 +134,15 @@ const CourseDetail = () => {
                             <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '10px' }}>
                                 <span className="badge badge-blue">{course.category}</span>
                                 <span className="badge badge-purple">{course.level}</span>
+                                {course.grade && course.grade !== 'All' && (
+                                    <span className="badge badge-green">🎓 {course.grade === 'UG' ? 'UG (College)' : `Class ${course.grade}`}</span>
+                                )}
+                                {course.grade === 'All' && (
+                                    <span className="badge" style={{ background: '#f3f4f6', color: '#4b5563' }}>🎓 All classes</span>
+                                )}
+                                {course.courseLanguage && (
+                                    <span className="badge" style={{ background: '#fef3c7', color: '#92400e' }}>🗣️ {course.courseLanguage}</span>
+                                )}
                                 <span className="badge" style={{ background: '#f3f4f6', color: '#4b5563' }}>🌐 {course.language}</span>
                             </div>
                             <h1 style={{ color: 'white', margin: 0, fontSize: '2rem', textShadow: '0 2px 4px rgba(0,0,0,0.4)' }}>{course.title}</h1>
@@ -142,12 +161,23 @@ const CourseDetail = () => {
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 300px', gap: '25px', alignItems: 'start' }}>
                     {/* --- LEFT: CONTENT --- */}
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '25px' }}>
+                        {/* 📅 PW-style weekly class timetable — live class, next class, poora week */}
+                        {course.schedule?.length > 0 && (
+                            <div className="dashboard-card" style={{ padding: '20px' }}>
+                                <h3 style={{ marginBottom: '15px' }}>📅 Class Timetable</h3>
+                                <ClassTimetable
+                                    schedule={course.schedule}
+                                    note={course.scheduleNote}
+                                />
+                            </div>
+                        )}
+
                         {/* Trailer */}
                         {course.trailerVideo && (
                             <div className="dashboard-card" style={{ padding: '20px' }}>
                                 <h3 style={{ marginBottom: '12px' }}>🎬 Course Trailer</h3>
                                 <video
-                                    src={`${import.meta.env.VITE_API_URL}/uploads/${course.trailerVideo}`}
+                                    src={assetUrl(course.trailerVideo)}
                                     controls
                                     style={{ width: '100%', borderRadius: '8px' }}
                                 />

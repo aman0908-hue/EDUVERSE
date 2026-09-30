@@ -1,6 +1,9 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useContext } from 'react';
 import { UserContext } from './context/UserContext.jsx';
+import { ThemeProvider } from './context/ThemeContext.jsx';
+import AdminDashboard from './pages/AdminDashboard.jsx';
+import AIAssistant from './pages/AIAssistant.jsx';
 import Home from './pages/Home';
 import Register from './pages/Register';
 import Login from './pages/Login';
@@ -14,7 +17,6 @@ import CourseDetail from './pages/CourseDetail';
 import StudentLayout from './layouts/StudentLayout.jsx';
 import TeacherLayout from './layouts/TeacherLayout.jsx';
 
-// 🚀 Route Guard: login + role check (Authentication & authorization security)
 // /auth/me se session restore hone tak wait karta hai (UserContext.sessionChecked)
 const RequireRole = ({ role, children }) => {
     const { user, sessionChecked } = useContext(UserContext);
@@ -32,6 +34,7 @@ const RequireRole = ({ role, children }) => {
 
     // Galat role wale ko apne dashboard par bhej do
     if (role && user.role !== role) {
+        if (user.role === 'admin') return <Navigate to="/admin-dashboard" replace />;
         return <Navigate to={user.role === 'teacher' ? '/teacher-dashboard' : '/student-dashboard'} replace />;
     }
 
@@ -40,6 +43,7 @@ const RequireRole = ({ role, children }) => {
 
 function App() {
   return (
+    <ThemeProvider>
     <Router>
       <Routes>
         <Route path="/" element={<Home />} />
@@ -56,6 +60,20 @@ function App() {
         <Route path="/student-dashboard" element={
           <RequireRole role="student">
             <StudentLayout><StudentDashboard /></StudentLayout>
+          </RequireRole>
+        } />
+
+        {/* 🚀 Standalone AI Assistant — navbar + floating button se accessible */}
+        <Route path="/ai-assistant" element={
+          <RequireRole>
+            <AIAssistant />
+          </RequireRole>
+        } />
+
+        {/* Admin-only control center. Backend admin middleware is the source of truth. */}
+        <Route path="/admin-dashboard" element={
+          <RequireRole role="admin">
+            <AdminDashboard />
           </RequireRole>
         } />
 
@@ -84,6 +102,7 @@ function App() {
         } />
       </Routes>
     </Router>
+    </ThemeProvider>
   );
 }
 

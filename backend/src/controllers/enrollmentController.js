@@ -1,4 +1,5 @@
 import Enrollment from '../models/Enrollment.js';
+import Course from '../models/Course.js';
 
 // ============================================
 // 🚀 ENROLLMENT CONTROLLER (Requirement 5)
@@ -8,20 +9,42 @@ import Enrollment from '../models/Enrollment.js';
 // 1. Student ko course mein join karna
 export const joinCourse = async (req, res) => {
     try {
-        // Pehle logged-in user (auth middleware), warna body se
-        const studentId = (req.user && req.user._id) || req.body.studentId;
+        // Always use the logged-in user. Falling back to req.body.studentId allowed
+        // any authenticated user to enroll somebody else's account (IDOR).
+        const studentId = req.user && req.user._id;
         const courseId = req.body.courseId;
 
-        if (!studentId || !courseId) {
-            return res.status(400).json({ success: false, message: "studentId and courseId are required." });
+        if (!studentId) {
+            return res.status(401).json({ success: false, message: "Please log in to enroll in a course." });
+        }
+        if (!courseId) {
+            return res.status(400).json({ success: false, message: "courseId is required." });
+        }
+
+        // Verify the course exists — returns a clean 404 instead of a 500
+        // when the ID is invalid or the course was deleted
+        const course = await Course.findById(courseId).select('_id').lean();
+        if (!course) {
+            return res.status(404).json({ success: false, message: "Course not found." });
         }
 
         const existing = await Enrollment.findOne({ student: studentId, course: courseId });
         if (existing) {
-            return res.status(400).json({ success: false, message: "You are already enrolled in this course." });
+            // Already enrolled IS a success. This used to return 400, which made
+            // the frontend show a "failed" toast even though the user was enrolled.
+            return res.status(200).json({ success: true, message: "You are already enrolled in this course." });
         }
 
-        const enrollment = await Enrollment.create({ student: studentId, course: courseId });
+        let enrollment;
+        try {
+            enrollment = await Enrollment.create({ student: studentId, course: courseId });
+        } catch (err) {
+            // Unique index (student+course) race — triggered by a double click
+            if (err && err.code === 11000) {
+                return res.status(200).json({ success: true, message: "You are already enrolled in this course." });
+            }
+            throw err;
+        }
         res.status(201).json({ success: true, message: "Enrolled successfully!", enrollment });
     } catch (error) {
         res.status(500).json({ success: false, message: "Enrollment failed: " + error.message });
@@ -32,7 +55,13 @@ export const joinCourse = async (req, res) => {
 export const checkJoined = async (req, res) => {
     try {
         const courseId = req.params.courseId;
-        const studentId = (req.user && req.user._id) || req.query.studentId;
+        // Never trust a query-string studentId — it would let anyone probe whether
+        // an arbitrary student is enrolled in a course. Use the session only.
+        const studentId = req.user && req.user._id;
+
+        if (!studentId) {
+            return res.status(401).json({ success: false, message: "Please log in to check enrollment." });
+        }
 
         const enrollment = await Enrollment.findOne({ student: studentId, course: courseId });
         res.status(200).json({ success: true, joined: !!enrollment });

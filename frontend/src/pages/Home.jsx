@@ -13,7 +13,7 @@ const Home = () => {
 
             <div className="home-container" style={{ flex: 1 }}>
                 <h1 className="home-title">
-                    Welcome to <span className="highlight">EduVerse</span>
+                    Welcome to <span className="highlight">AmanTech Learning</span>
                 </h1>
                 
                 <p className="subtitle home-subtitle">
@@ -25,7 +25,7 @@ const Home = () => {
                     {user ? (
                         <>
                             <Link 
-                                to={user.role === 'teacher' ? '/teacher-dashboard' : '/student-dashboard'} 
+                                to={user.role === 'admin' ? '/admin-dashboard' : user.role === 'teacher' ? '/teacher-dashboard' : '/student-dashboard'}
                                 className="btn btn-primary home-btn">
                                 Go to Dashboard →
                             </Link>

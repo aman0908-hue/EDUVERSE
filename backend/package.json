@@ -5,7 +5,9 @@
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
-    "dev": "nodemon src/server.js"
+    "dev": "nodemon src/server.js",
+    "cleanup:teachers": "node src/scripts/cleanupTeachers.js",
+    "cleanup:teachers:confirm": "node src/scripts/cleanupTeachers.js --confirm"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",

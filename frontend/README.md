@@ -1,6 +1,6 @@
-# EduVerse - AI-Powered Learning Management System (LMS)
+# ATs Learning - AI-Powered Learning Management System (LMS)
 
-EduVerse is a full-stack MERN platform connecting Teachers and Students for seamless course creation, video learning, and quiz tracking.
+ATs Learning is a full-stack MERN platform connecting Teachers and Students for seamless course creation, video learning, and quiz tracking.
 
 ## Tech Stack
 - **Frontend:** React 19, Vite, React Router DOM, Axios, Lucide Icons
@@ -17,7 +17,7 @@ EduVerse is a full-stack MERN platform connecting Teachers and Students for seam
 ### 1. Clone the repository
 \`\`\`bash
 git clone <your-repository-url>
-cd EduVerse
+cd AT Learning
 \`\`\`
 
 ### 2. Backend Setup

@@ -1,0 +1,882 @@
+{
+  "users": [
+    {
+      "_id": "6a80a756a39f0b14be88c0c9",
+      "name": "Aman Yadav",
+      "email": "aman.ydv891@gmail.com",
+      "password": "$2b$10$ppSsghcVeEqQKOk9hXON8euaO410z7ji3I7w/75sIKg8/w9XSszuW",
+      "role": "student",
+      "createdAt": "2026-08-15T17:52:22.676Z",
+      "updatedAt": "2026-09-26T09:11:42.844Z",
+      "__v": 0,
+      "isActive": true
+    },
+    {
+      "_id": "6a81c0b3c6be75c30ce6e842",
+      "name": "satyam sir",
+      "email": "satyam.ydv899@gmail.com",
+      "password": "$2b$10$AV2itXhr1g7rIcPvYY8LSOfwGri3KyShIKspJoHiMUg7acYunlZxK",
+      "role": "teacher",
+      "createdAt": "2026-08-16T13:52:51.624Z",
+      "updatedAt": "2026-09-26T09:11:42.844Z",
+      "__v": 0,
+      "isActive": true
+    },
+    {
+      "_id": "6aa7f8cfe9c0536a8f30865a",
+      "name": "Test Teacher",
+      "email": "teacher1@test.com",
+      "password": "$2b$10$qW2JQJN8/1vRrYhFa2BN9erQT4C6R1WNMMqAFX7lSVMorGwpwuQxC",
+      "role": "teacher",
+      "profileImage": "1789393103225-test-thumb.png",
+      "createdAt": "2026-09-14T13:38:23.283Z",
+      "updatedAt": "2026-09-26T09:33:52.645Z",
+      "__v": 0,
+      "isActive": true
+    },
+    {
+      "_id": "6aa7f8cfe9c0536a8f30865b",
+      "name": "Test Student",
+      "email": "student1@test.com",
+      "password": "$2b$10$dsCO/c8RkCiLjANoy0jyteuhbzGP08cqKODoCBW/yXSm2hfSqj0ZK",
+      "role": "student",
+      "profileImage": "",
+      "createdAt": "2026-09-14T13:38:23.507Z",
+      "updatedAt": "2026-09-26T09:33:58.930Z",
+      "__v": 0,
+      "isActive": true
+    },
+    {
+      "_id": "6ab79792f796a447960b2829",
+      "email": "adminlogin@eduverse.com",
+      "__v": 0,
+      "createdAt": "2026-09-26T09:59:46.378Z",
+      "isActive": true,
+      "name": "EduVerse Admin Aman",
+      "password": "$2b$12$C0UKKOxPG7LTZdpXaTPGWOHmrEqe3L1vkyGenoX9yCC3i1.6H1CGO",
+      "profileImage": "",
+      "role": "admin",
+      "updatedAt": "2026-09-26T10:40:29.954Z"
+    },
+    {
+      "_id": "6ab7b31118fc9eaaf03cc406",
+      "name": "aman ",
+      "email": "aman@example.com",
+      "password": "$2b$10$JgGudagoN6NW6Ix.fykSmOZnyHcmND4eOfh8EkeTLuYft0FA/fDyG",
+      "role": "teacher",
+      "isActive": false,
+      "profileImage": "",
+      "createdAt": "2026-09-26T11:57:05.673Z",
+      "updatedAt": "2026-09-26T16:01:11.116Z",
+      "__v": 0
+    },
+    {
+      "_id": "6ab8b23dbc7a856bfab3eab1",
+      "name": "Guide Test Student",
+      "email": "guide-test@student.test",
+      "password": "$2b$10$5f.pSFPeeOZQO8Un/7bJiuGBxlWrme94u8r4IXAzyaGbM2VlDtkZ2",
+      "role": "student",
+      "isActive": true,
+      "profileImage": "",
+      "createdAt": "2026-09-27T06:05:49.239Z",
+      "updatedAt": "2026-09-27T06:05:49.239Z",
+      "__v": 0
+    },
+    {
+      "_id": "6ab8de64839c11320ee65308",
+      "name": "Rajesh Sir",
+      "email": "demo.teacher@eduverse.test",
+      "password": "$2b$10$7fPlwJEh.j8bcLOuqC0bYe6nsw.NRbTXdi.01xpiZ5HjDmDXFZ.fa",
+      "role": "teacher",
+      "grade": "All",
+      "isActive": true,
+      "profileImage": "",
+      "createdAt": "2026-09-27T09:14:12.234Z",
+      "updatedAt": "2026-09-27T09:14:12.234Z",
+      "__v": 0
+    },
+    {
+      "_id": "6ab8de64839c11320ee65312",
+      "name": "Aarav",
+      "email": "demo.aarav@eduverse.test",
+      "password": "$2b$10$UdRkL4MBifyweQLHqnWxL.wK2gVgILCB.WUjTyAb/1Q972og5L15.",
+      "role": "student",
+      "grade": "10",
+      "isActive": true,
+      "profileImage": "",
+      "createdAt": "2026-09-27T09:14:12.946Z",
+      "updatedAt": "2026-09-27T09:14:12.946Z",
+      "__v": 0
+    },
+    {
+      "_id": "6ab8de65839c11320ee65314",
+      "name": "Diya",
+      "email": "demo.diya@eduverse.test",
+      "password": "$2b$10$3o32ikI7QmfgfGMY03u35uVrrGE1nxrooTQFMjGJ9Gclu914fFgXe",
+      "role": "student",
+      "grade": "12",
+      "isActive": true,
+      "profileImage": "",
+      "createdAt": "2026-09-27T09:14:13.190Z",
+      "updatedAt": "2026-09-27T09:14:13.190Z",
+      "__v": 0
+    },
+    {
+      "_id": "6ab8de65839c11320ee65316",
+      "name": "Kabir",
+      "email": "demo.kabir@eduverse.test",
+      "password": "$2b$10$GzBKjrRXyDPGXB2uVLwoee45antL5CqAXKYVtx50TDJcDOv35/QB.",
+      "role": "student",
+      "grade": "9",
+      "isActive": true,
+      "profileImage": "",
+      "createdAt": "2026-09-27T09:14:13.360Z",
+      "updatedAt": "2026-09-27T09:14:13.360Z",
+      "__v": 0
+    }
+  ],
+  "courses": [
+    {
+      "_id": "6a884f703c9f6b43fc0187b9",
+      "title": "advanced java programming",
+      "description": "smart programming classes",
+      "category": "Programming",
+      "price": 599,
+      "instructor": "6a81c0b3c6be75c30ce6e842",
+      "thumbnail": "",
+      "isPublished": false,
+      "createdAt": "2026-08-21T13:15:28.427Z",
+      "updatedAt": "2026-09-27T07:14:26.427Z",
+      "__v": 0,
+      "language": "English",
+      "learningOutcomes": [],
+      "level": "Beginner",
+      "requirements": [],
+      "schedule": [],
+      "scheduleNote": ""
+    },
+    {
+      "_id": "6aa7fadecce1ce5acbc47f70",
+      "title": "Full Stack MERN Masterclass v2",
+      "description": "Learn MERN from scratch with projects",
+      "category": "Programming",
+      "level": "Beginner",
+      "language": "Hindi",
+      "requirements": [
+        "Basic JS knowledge",
+        "A laptop"
+      ],
+      "learningOutcomes": [
+        "Build full apps",
+        "Master APIs"
+      ],
+      "trailerVideo": "1789393630990-test-video.mp4",
+      "price": 999,
+      "instructor": "6aa7f8cfe9c0536a8f30865a",
+      "thumbnail": "1789394164132-test-thumb.png",
+      "isPublished": true,
+      "createdAt": "2026-09-14T13:47:10.996Z",
+      "updatedAt": "2026-09-27T06:05:49.648Z",
+      "__v": 6,
+      "schedule": [
+        {
+          "label": "Week 1 — Intro to Node",
+          "day": "Monday",
+          "startTime": "18:30",
+          "endTime": "20:00",
+          "date": "",
+          "isLive": true,
+          "meetingLink": "",
+          "_id": "6ab8b23dbc7a856bfab3eab4"
+        },
+        {
+          "label": "Week 2 — Express Routing",
+          "day": "Wednesday",
+          "startTime": "18:30",
+          "endTime": "20:00",
+          "date": "",
+          "isLive": true,
+          "meetingLink": "",
+          "_id": "6ab8b23dbc7a856bfab3eab5"
+        }
+      ],
+      "scheduleNote": "Doubt session every Saturday"
+    },
+    {
+      "_id": "6ab8de64839c11320ee65309",
+      "title": "Class 10 Science (Live Batch)",
+      "description": "Weekly live science batch for class 10 students. Physics, Chemistry aur Biology ki classes.",
+      "category": "Science",
+      "grade": "10",
+      "level": "Beginner",
+      "language": "English",
+      "requirements": [],
+      "learningOutcomes": [],
+      "trailerVideo": "",
+      "price": 3000,
+      "instructor": "6ab8de64839c11320ee65308",
+      "thumbnail": "",
+      "isPublished": true,
+      "schedule": [
+        {
+          "label": "Physics - Light and Reflection",
+          "day": "Monday",
+          "startTime": "18:30",
+          "endTime": "20:00",
+          "date": "",
+          "isLive": true,
+          "meetingLink": "https://meet.google.com/phy-class",
+          "_id": "6ab8de64839c11320ee6530a"
+        },
+        {
+          "label": "Chemistry - Reactions",
+          "day": "Monday",
+          "startTime": "20:15",
+          "endTime": "21:00",
+          "date": "",
+          "isLive": true,
+          "meetingLink": "https://meet.google.com/chem-class",
+          "_id": "6ab8de64839c11320ee6530b"
+        },
+        {
+          "label": "Biology - Cell Structure",
+          "day": "Wednesday",
+          "startTime": "18:30",
+          "endTime": "20:00",
+          "date": "",
+          "isLive": true,
+          "meetingLink": "https://meet.google.com/bio-class",
+          "_id": "6ab8de64839c11320ee6530c"
+        },
+        {
+          "label": "Doubt Session",
+          "day": "Friday",
+          "startTime": "11:00",
+          "endTime": "12:00",
+          "date": "",
+          "isLive": true,
+          "meetingLink": "https://meet.google.com/doubt-class",
+          "_id": "6ab8de64839c11320ee6530d"
+        }
+      ],
+      "scheduleNote": "Doubt session har Saturday. Recorded lectures raat ko 9 baje upload hote hain.",
+      "createdAt": "2026-09-27T09:14:12.672Z",
+      "updatedAt": "2026-09-27T09:14:12.672Z",
+      "__v": 0
+    },
+    {
+      "_id": "6ab8de64839c11320ee6530e",
+      "title": "Class 12 Physics (Live Batch)",
+      "description": "Class 12 students ke liye physics.",
+      "category": "Science",
+      "grade": "12",
+      "level": "Beginner",
+      "language": "English",
+      "requirements": [],
+      "learningOutcomes": [],
+      "trailerVideo": "",
+      "price": 4500,
+      "instructor": "6ab8de64839c11320ee65308",
+      "thumbnail": "",
+      "isPublished": true,
+      "schedule": [
+        {
+          "label": "Class 12 Physics - Electrostatics",
+          "day": "Tuesday",
+          "startTime": "17:00",
+          "endTime": "19:00",
+          "date": "",
+          "isLive": true,
+          "meetingLink": "https://meet.google.com/p12",
+          "_id": "6ab8de64839c11320ee6530f"
+        }
+      ],
+      "scheduleNote": "Board exam focused batch.",
+      "createdAt": "2026-09-27T09:14:12.749Z",
+      "updatedAt": "2026-09-27T09:14:12.749Z",
+      "__v": 0
+    },
+    {
+      "_id": "6ab8de64839c11320ee65310",
+      "title": "General Study Skills",
+      "description": "Har class ke liye open course.",
+      "category": "Study Skills",
+      "grade": "All",
+      "level": "Beginner",
+      "language": "English",
+      "requirements": [],
+      "learningOutcomes": [],
+      "trailerVideo": "",
+      "price": 0,
+      "instructor": "6ab8de64839c11320ee65308",
+      "thumbnail": "",
+      "isPublished": true,
+      "schedule": [
+        {
+          "label": "Study Planning Workshop",
+          "day": "Thursday",
+          "startTime": "10:00",
+          "endTime": "11:00",
+          "date": "",
+          "isLive": true,
+          "meetingLink": "",
+          "_id": "6ab8de64839c11320ee65311"
+        }
+      ],
+      "scheduleNote": "",
+      "createdAt": "2026-09-27T09:14:12.801Z",
+      "updatedAt": "2026-09-27T09:14:12.801Z",
+      "__v": 0
+    }
+  ],
+  "enrollments": [
+    {
+      "_id": "6a885efc709969590af914de",
+      "student": "6a80a756a39f0b14be88c0c9",
+      "course": "6a884f703c9f6b43fc0187b9",
+      "createdAt": "2026-08-21T14:21:48.878Z",
+      "updatedAt": "2026-08-21T14:21:48.878Z",
+      "__v": 0
+    },
+    {
+      "_id": "6aa6858e023b79245dce7392",
+      "student": "6a81c0b3c6be75c30ce6e842",
+      "course": "6a884f703c9f6b43fc0187b9",
+      "createdAt": "2026-09-13T11:14:22.050Z",
+      "updatedAt": "2026-09-13T11:14:22.050Z",
+      "__v": 0
+    },
+    {
+      "_id": "6aa7fb9acce1ce5acbc47f74",
+      "student": "6aa7f8cfe9c0536a8f30865b",
+      "course": "6aa7fadecce1ce5acbc47f70",
+      "createdAt": "2026-09-14T13:50:18.412Z",
+      "updatedAt": "2026-09-14T13:50:18.412Z",
+      "__v": 0
+    },
+    {
+      "_id": "6aa802502c15c8bcdd38a93a",
+      "student": "6aa7f8cfe9c0536a8f30865b",
+      "course": "6a884f703c9f6b43fc0187b9",
+      "createdAt": "2026-09-14T14:18:56.858Z",
+      "updatedAt": "2026-09-14T14:18:56.858Z",
+      "__v": 0
+    },
+    {
+      "_id": "6ab8b0675331f6b04cb903f6",
+      "student": "6ab8b0655331f6b04cb903f3",
+      "course": "6aa7fadecce1ce5acbc47f70",
+      "createdAt": "2026-09-27T05:57:59.128Z",
+      "updatedAt": "2026-09-27T05:57:59.128Z",
+      "__v": 0
+    },
+    {
+      "_id": "6ab8b0baef87161ac179d47d",
+      "student": "6ab8b0b7ef87161ac179d478",
+      "course": "6aa7fadecce1ce5acbc47f70",
+      "createdAt": "2026-09-27T05:59:22.156Z",
+      "updatedAt": "2026-09-27T05:59:22.156Z",
+      "__v": 0
+    },
+    {
+      "_id": "6ab8b21d7b45f03f5d01fd93",
+      "student": "6ab8b21b7b45f03f5d01fd8e",
+      "course": "6aa7fadecce1ce5acbc47f70",
+      "createdAt": "2026-09-27T06:05:17.812Z",
+      "updatedAt": "2026-09-27T06:05:17.812Z",
+      "__v": 0
+    },
+    {
+      "_id": "6ab8b23dbc7a856bfab3eab6",
+      "student": "6ab8b23dbc7a856bfab3eab1",
+      "course": "6aa7fadecce1ce5acbc47f70",
+      "createdAt": "2026-09-27T06:05:49.888Z",
+      "updatedAt": "2026-09-27T06:05:49.888Z",
+      "__v": 0
+    },
+    {
+      "_id": "6ab8de65839c11320ee65313",
+      "student": "6ab8de64839c11320ee65312",
+      "course": "6ab8de64839c11320ee65309",
+      "createdAt": "2026-09-27T09:14:13.043Z",
+      "updatedAt": "2026-09-27T09:14:13.043Z",
+      "__v": 0
+    },
+    {
+      "_id": "6ab8de65839c11320ee65315",
+      "student": "6ab8de65839c11320ee65314",
+      "course": "6ab8de64839c11320ee65309",
+      "createdAt": "2026-09-27T09:14:13.244Z",
+      "updatedAt": "2026-09-27T09:14:13.244Z",
+      "__v": 0
+    },
+    {
+      "_id": "6ab8de65839c11320ee65317",
+      "student": "6ab8de65839c11320ee65316",
+      "course": "6ab8de64839c11320ee65309",
+      "createdAt": "2026-09-27T09:14:13.404Z",
+      "updatedAt": "2026-09-27T09:14:13.404Z",
+      "__v": 0
+    }
+  ],
+  "progresses": [
+    {
+      "_id": "6aa802622c15c8bcdd38a93d",
+      "studentId": "6aa7f8cfe9c0536a8f30865b",
+      "courseId": "6a884f703c9f6b43fc0187b9",
+      "completedLessons": [
+        "6aa55521ad40df9d2f366210"
+      ],
+      "quizAttempts": [
+        {
+          "lessonId": "6aa55521ad40df9d2f366210",
+          "score": 1,
+          "totalMarks": 1,
+          "answers": [
+            {
+              "questionText": "what is your name ",
+              "selectedOption": "aman ",
+              "correctAnswer": "aman ",
+              "isCorrect": true,
+              "_id": "6aa802622c15c8bcdd38a93f"
+            }
+          ],
+          "_id": "6aa802622c15c8bcdd38a93e"
+        }
+      ],
+      "createdAt": "2026-09-14T14:19:14.977Z",
+      "updatedAt": "2026-09-14T14:19:14.977Z",
+      "__v": 0
+    },
+    {
+      "_id": "6ab8de66839c11320ee6531d",
+      "studentId": "6ab8de64839c11320ee65312",
+      "courseId": "6ab8de64839c11320ee65309",
+      "completedLessons": [
+        "6ab8de65839c11320ee6531a"
+      ],
+      "quizAttempts": [
+        {
+          "score": 8,
+          "totalMarks": 10,
+          "attemptedAt": "2026-09-27T09:14:14.371Z",
+          "_id": "6ab8de66839c11320ee6531e",
+          "answers": []
+        }
+      ],
+      "createdAt": "2026-09-27T09:14:14.373Z",
+      "updatedAt": "2026-09-27T09:14:14.373Z",
+      "__v": 0
+    },
+    {
+      "_id": "6ab8de66839c11320ee6531f",
+      "studentId": "6ab8de65839c11320ee65314",
+      "courseId": "6ab8de64839c11320ee65309",
+      "completedLessons": [],
+      "quizAttempts": [],
+      "createdAt": "2026-09-27T09:14:14.414Z",
+      "updatedAt": "2026-09-17T09:14:14.413Z",
+      "__v": 0
+    }
+  ],
+  "modules": [
+    {
+      "_id": "6aa7faf7cce1ce5acbc47f71",
+      "title": "Module 1: Node Basics [edited]",
+      "courseId": "6aa7fadecce1ce5acbc47f70",
+      "order": 1,
+      "createdAt": "2026-09-14T13:47:35.081Z",
+      "updatedAt": "2026-09-14T13:57:18.456Z",
+      "__v": 0
+    },
+    {
+      "_id": "6aad773beed0de99084f3587",
+      "title": "java",
+      "courseId": "6a884f703c9f6b43fc0187b9",
+      "order": 1,
+      "createdAt": "2026-09-18T17:39:07.898Z",
+      "updatedAt": "2026-09-18T17:39:07.898Z",
+      "__v": 0
+    },
+    {
+      "_id": "6ab8dc62df8f46518b4bcc89",
+      "title": "Physics",
+      "courseId": "6ab8dc62df8f46518b4bcc7e",
+      "order": 1,
+      "createdAt": "2026-09-27T09:05:38.947Z",
+      "updatedAt": "2026-09-27T09:05:38.947Z",
+      "__v": 0
+    },
+    {
+      "_id": "6ab8dc8d3928dec139636137",
+      "title": "Physics",
+      "courseId": "6ab8dc873928dec13963612c",
+      "order": 1,
+      "createdAt": "2026-09-27T09:06:21.255Z",
+      "updatedAt": "2026-09-27T09:06:21.255Z",
+      "__v": 0
+    },
+    {
+      "_id": "6ab8de57545663e0eecaf0d0",
+      "title": "Physics",
+      "courseId": "6ab8de56545663e0eecaf0c1",
+      "order": 1,
+      "createdAt": "2026-09-27T09:13:59.372Z",
+      "updatedAt": "2026-09-27T09:13:59.372Z",
+      "__v": 0
+    },
+    {
+      "_id": "6ab8de65839c11320ee65318",
+      "title": "Physics",
+      "courseId": "6ab8de64839c11320ee65309",
+      "order": 1,
+      "createdAt": "2026-09-27T09:14:13.548Z",
+      "updatedAt": "2026-09-27T09:14:13.548Z",
+      "__v": 0
+    }
+  ],
+  "chapters": [
+    {
+      "_id": "6aa7faf7cce1ce5acbc47f72",
+      "title": "Chapter 1: Intro to Node [edited]",
+      "moduleId": "6aa7faf7cce1ce5acbc47f71",
+      "courseId": "6aa7fadecce1ce5acbc47f70",
+      "order": 1,
+      "createdAt": "2026-09-14T13:47:35.320Z",
+      "updatedAt": "2026-09-14T13:57:18.752Z",
+      "__v": 0
+    },
+    {
+      "_id": "6aad7747eed0de99084f3588",
+      "title": "yadav",
+      "moduleId": "6aad773beed0de99084f3587",
+      "courseId": "6a884f703c9f6b43fc0187b9",
+      "order": 1,
+      "createdAt": "2026-09-18T17:39:19.996Z",
+      "updatedAt": "2026-09-18T17:39:19.996Z",
+      "__v": 0
+    },
+    {
+      "_id": "6ab8dc62df8f46518b4bcc8a",
+      "title": "Light and Reflection",
+      "moduleId": "6ab8dc62df8f46518b4bcc89",
+      "courseId": "6ab8dc62df8f46518b4bcc7e",
+      "order": 1,
+      "createdAt": "2026-09-27T09:05:38.993Z",
+      "updatedAt": "2026-09-27T09:05:38.993Z",
+      "__v": 0
+    },
+    {
+      "_id": "6ab8dc8d3928dec139636138",
+      "title": "Light and Reflection",
+      "moduleId": "6ab8dc8d3928dec139636137",
+      "courseId": "6ab8dc873928dec13963612c",
+      "order": 1,
+      "createdAt": "2026-09-27T09:06:21.840Z",
+      "updatedAt": "2026-09-27T09:06:21.840Z",
+      "__v": 0
+    },
+    {
+      "_id": "6ab8de57545663e0eecaf0d1",
+      "title": "Light and Reflection",
+      "moduleId": "6ab8de57545663e0eecaf0d0",
+      "courseId": "6ab8de56545663e0eecaf0c1",
+      "order": 1,
+      "createdAt": "2026-09-27T09:13:59.422Z",
+      "updatedAt": "2026-09-27T09:13:59.422Z",
+      "__v": 0
+    },
+    {
+      "_id": "6ab8de65839c11320ee65319",
+      "title": "Light and Reflection",
+      "moduleId": "6ab8de65839c11320ee65318",
+      "courseId": "6ab8de64839c11320ee65309",
+      "order": 1,
+      "createdAt": "2026-09-27T09:14:13.597Z",
+      "updatedAt": "2026-09-27T09:14:13.597Z",
+      "__v": 0
+    }
+  ],
+  "lessons": [
+    {
+      "_id": "6aa7fb81cce1ce5acbc47f73",
+      "title": "Lecture 1: Hello Node [edited]",
+      "courseId": "6aa7fadecce1ce5acbc47f70",
+      "videoUrl": "",
+      "videoFile": "1789393793162-tiny.mp4",
+      "theoryContent": "Welcome!",
+      "attachment": "1789393793163-test-thumb.png",
+      "chapterId": "6aa7faf7cce1ce5acbc47f72",
+      "order": 1,
+      "materials": [
+        {
+          "title": "Starter Code",
+          "file": "1789394186660-test-thumb.png",
+          "_id": "6aa7fd0a57610abea24396e4"
+        }
+      ],
+      "createdAt": "2026-09-14T13:49:53.165Z",
+      "updatedAt": "2026-09-14T13:58:00.986Z",
+      "__v": 0
+    },
+    {
+      "_id": "6aa809f12c15c8bcdd38a978",
+      "title": "Big Video Test",
+      "courseId": "6aa7fadecce1ce5acbc47f70",
+      "videoUrl": "",
+      "videoFile": "1789397489777-big-test.mp4",
+      "theoryContent": "",
+      "attachment": "1789397489788-test-thumb.png",
+      "chapterId": "6aa7faf7cce1ce5acbc47f72",
+      "order": 2,
+      "materials": [],
+      "createdAt": "2026-09-14T14:51:29.789Z",
+      "updatedAt": "2026-09-14T14:51:29.789Z",
+      "__v": 0
+    },
+    {
+      "_id": "6aa80dac2c15c8bcdd38a991",
+      "title": "E2E: Video File Lesson",
+      "courseId": "6aa7fadecce1ce5acbc47f70",
+      "videoUrl": "",
+      "videoFile": "1789398444333-big-test.mp4",
+      "theoryContent": "",
+      "attachment": "",
+      "chapterId": "6aa7faf7cce1ce5acbc47f72",
+      "order": 3,
+      "materials": [],
+      "createdAt": "2026-09-14T15:07:24.338Z",
+      "updatedAt": "2026-09-14T15:07:24.338Z",
+      "__v": 0
+    },
+    {
+      "_id": "6aa80dac2c15c8bcdd38a992",
+      "title": "E2E: YouTube Link Lesson",
+      "courseId": "6aa7fadecce1ce5acbc47f70",
+      "videoUrl": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+      "videoFile": "",
+      "theoryContent": "",
+      "attachment": "",
+      "chapterId": "6aa7faf7cce1ce5acbc47f72",
+      "order": 4,
+      "materials": [],
+      "createdAt": "2026-09-14T15:07:24.678Z",
+      "updatedAt": "2026-09-14T15:07:24.678Z",
+      "__v": 0
+    },
+    {
+      "_id": "6aa80dce2c15c8bcdd38a994",
+      "title": "E2E: Notes + PDF Lesson",
+      "courseId": "6aa7fadecce1ce5acbc47f70",
+      "videoUrl": "",
+      "videoFile": "",
+      "theoryContent": "Read: https://nodejs.org/docs and https://react.dev",
+      "attachment": "1789398478212-test-thumb.png",
+      "chapterId": "6aa7faf7cce1ce5acbc47f72",
+      "order": 5,
+      "materials": [],
+      "createdAt": "2026-09-14T15:07:58.213Z",
+      "updatedAt": "2026-09-14T15:07:58.213Z",
+      "__v": 0
+    },
+    {
+      "_id": "6aad777ceed0de99084f3589",
+      "title": "yada",
+      "courseId": "6a884f703c9f6b43fc0187b9",
+      "videoUrl": "",
+      "videoFile": "",
+      "theoryContent": "",
+      "attachment": "",
+      "chapterId": "6aad7747eed0de99084f3588",
+      "order": 1,
+      "materials": [],
+      "createdAt": "2026-09-18T17:40:12.642Z",
+      "updatedAt": "2026-09-18T17:40:12.642Z",
+      "__v": 0
+    },
+    {
+      "_id": "6ab8dc8e3928dec139636139",
+      "title": "Reflection of Light - Introduction",
+      "courseId": "6ab8dc873928dec13963612c",
+      "videoUrl": "",
+      "videoFile": "",
+      "theoryContent": "Light travels in straight lines. When light hits a surface it bounces back, and this is called reflection. The laws of reflection state that the angle of incidence equals the angle of reflection.",
+      "attachment": "",
+      "chapterId": "6ab8dc8d3928dec139636138",
+      "order": 1,
+      "materials": [],
+      "createdAt": "2026-09-27T09:06:22.219Z",
+      "updatedAt": "2026-09-27T09:06:22.219Z",
+      "__v": 0
+    },
+    {
+      "_id": "6ab8dc8f3928dec13963613a",
+      "title": "Spherical Mirrors - Concave and Convex",
+      "courseId": "6ab8dc873928dec13963612c",
+      "videoUrl": "",
+      "videoFile": "",
+      "theoryContent": "A concave mirror focuses light and is used by dentists. A convex mirror always forms a virtual, upright and diminished image. The focal length is half the radius of curvature.",
+      "attachment": "",
+      "chapterId": "6ab8dc8d3928dec139636138",
+      "order": 2,
+      "materials": [],
+      "createdAt": "2026-09-27T09:06:23.423Z",
+      "updatedAt": "2026-09-27T09:06:23.423Z",
+      "__v": 0
+    },
+    {
+      "_id": "6ab8dc903928dec13963613b",
+      "title": "Refraction and Laws of Refraction",
+      "courseId": "6ab8dc873928dec13963612c",
+      "videoUrl": "",
+      "videoFile": "",
+      "theoryContent": "Refraction is the bending of light as it passes from one medium to another. Snells law relates the angle of incidence and the angle of refraction.",
+      "attachment": "",
+      "chapterId": "6ab8dc8d3928dec139636138",
+      "order": 3,
+      "materials": [],
+      "createdAt": "2026-09-27T09:06:24.018Z",
+      "updatedAt": "2026-09-27T09:06:24.018Z",
+      "__v": 0
+    },
+    {
+      "_id": "6ab8de57545663e0eecaf0d2",
+      "title": "Reflection of Light - Introduction",
+      "courseId": "6ab8de56545663e0eecaf0c1",
+      "videoUrl": "",
+      "videoFile": "",
+      "theoryContent": "Light travels in straight lines. When light hits a surface it bounces back, and this is called reflection. The laws of reflection state that the angle of incidence equals the angle of reflection.",
+      "attachment": "",
+      "chapterId": "6ab8de57545663e0eecaf0d1",
+      "order": 1,
+      "materials": [],
+      "createdAt": "2026-09-27T09:13:59.470Z",
+      "updatedAt": "2026-09-27T09:13:59.470Z",
+      "__v": 0
+    },
+    {
+      "_id": "6ab8de57545663e0eecaf0d3",
+      "title": "Spherical Mirrors - Concave and Convex",
+      "courseId": "6ab8de56545663e0eecaf0c1",
+      "videoUrl": "",
+      "videoFile": "",
+      "theoryContent": "A concave mirror focuses light and is used by dentists. A convex mirror always forms a virtual, upright and diminished image. The focal length is half the radius of curvature.",
+      "attachment": "",
+      "chapterId": "6ab8de57545663e0eecaf0d1",
+      "order": 2,
+      "materials": [],
+      "createdAt": "2026-09-27T09:13:59.548Z",
+      "updatedAt": "2026-09-27T09:13:59.548Z",
+      "__v": 0
+    },
+    {
+      "_id": "6ab8de57545663e0eecaf0d4",
+      "title": "Refraction and Laws of Refraction",
+      "courseId": "6ab8de56545663e0eecaf0c1",
+      "videoUrl": "",
+      "videoFile": "",
+      "theoryContent": "Refraction is the bending of light as it passes from one medium to another. Snells law relates the angle of incidence and the angle of refraction.",
+      "attachment": "",
+      "chapterId": "6ab8de57545663e0eecaf0d1",
+      "order": 3,
+      "materials": [],
+      "createdAt": "2026-09-27T09:13:59.622Z",
+      "updatedAt": "2026-09-27T09:13:59.622Z",
+      "__v": 0
+    },
+    {
+      "_id": "6ab8de65839c11320ee6531a",
+      "title": "Reflection of Light - Introduction",
+      "courseId": "6ab8de64839c11320ee65309",
+      "videoUrl": "",
+      "videoFile": "",
+      "theoryContent": "Light travels in straight lines. When light hits a surface it bounces back, and this is called reflection. The laws of reflection state that the angle of incidence equals the angle of reflection.",
+      "attachment": "",
+      "chapterId": "6ab8de65839c11320ee65319",
+      "order": 1,
+      "materials": [],
+      "createdAt": "2026-09-27T09:14:13.649Z",
+      "updatedAt": "2026-09-27T09:14:13.649Z",
+      "__v": 0
+    },
+    {
+      "_id": "6ab8de65839c11320ee6531b",
+      "title": "Spherical Mirrors - Concave and Convex",
+      "courseId": "6ab8de64839c11320ee65309",
+      "videoUrl": "",
+      "videoFile": "",
+      "theoryContent": "A concave mirror focuses light and is used by dentists. A convex mirror always forms a virtual, upright and diminished image. The focal length is half the radius of curvature.",
+      "attachment": "",
+      "chapterId": "6ab8de65839c11320ee65319",
+      "order": 2,
+      "materials": [],
+      "createdAt": "2026-09-27T09:14:13.692Z",
+      "updatedAt": "2026-09-27T09:14:13.692Z",
+      "__v": 0
+    },
+    {
+      "_id": "6ab8de65839c11320ee6531c",
+      "title": "Refraction and Laws of Refraction",
+      "courseId": "6ab8de64839c11320ee65309",
+      "videoUrl": "",
+      "videoFile": "",
+      "theoryContent": "Refraction is the bending of light as it passes from one medium to another. Snells law relates the angle of incidence and the angle of refraction.",
+      "attachment": "",
+      "chapterId": "6ab8de65839c11320ee65319",
+      "order": 3,
+      "materials": [],
+      "createdAt": "2026-09-27T09:14:13.795Z",
+      "updatedAt": "2026-09-27T09:14:13.795Z",
+      "__v": 0
+    },
+    {
+      "_id": "6ab8df74464c1e847ee43f34",
+      "title": "physics",
+      "courseId": "6ab8de64839c11320ee6530e",
+      "videoUrl": "demo.teacher@eduverse.test\t",
+      "videoFile": "",
+      "theoryContent": "",
+      "attachment": "",
+      "chapterId": null,
+      "order": 1,
+      "materials": [],
+      "createdAt": "2026-09-27T09:18:44.258Z",
+      "updatedAt": "2026-09-27T09:18:44.258Z",
+      "__v": 0
+    },
+    {
+      "_id": "6ab8dfbc464c1e847ee43f35",
+      "title": "physics",
+      "courseId": "6ab8de64839c11320ee6530e",
+      "videoUrl": "",
+      "videoFile": "",
+      "theoryContent": "reflection of light",
+      "attachment": "",
+      "chapterId": null,
+      "order": 2,
+      "materials": [],
+      "createdAt": "2026-09-27T09:19:56.493Z",
+      "updatedAt": "2026-09-27T09:19:56.493Z",
+      "__v": 0
+    }
+  ],
+  "quizzes": [],
+  "teacherrequests": [
+    {
+      "_id": "6ab7b31118fc9eaaf03cc407",
+      "user": "6ab7b31118fc9eaaf03cc406",
+      "name": "aman ",
+      "email": "aman@example.com",
+      "qualification": "bca",
+      "experience": "2yr ",
+      "subject": "java",
+      "reason": "need mony\r\n",
+      "status": "rejected",
+      "reviewNote": "",
+      "reviewedBy": "6ab79792f796a447960b2829",
+      "createdAt": "2026-09-26T11:57:05.793Z",
+      "updatedAt": "2026-09-26T12:54:55.107Z",
+      "__v": 0
+    }
+  ]
+}

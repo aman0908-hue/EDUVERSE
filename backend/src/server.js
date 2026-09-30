@@ -5,6 +5,8 @@ import cookieParser from 'cookie-parser';
 import connectDB from './config/db.js';
 import path from 'path'; 
 import mongoose from 'mongoose';
+import Course from './models/Course.js';
+import Lesson from './models/Lesson.js';
 
 // --- ROUTES IMPORTS ---
 import authRoutes from './routes/authRoutes.js';
@@ -15,21 +17,26 @@ import progressRoutes from './routes/progressRoutes.js';
 import moduleRoutes from './routes/moduleRoutes.js';   
 import chapterRoutes from './routes/chapterRoutes.js'; 
 import enrollmentRoutes from './routes/enrollmentRoutes.js'; // 🚀 NAYA
+import adminRoutes from './routes/adminRoutes.js';
+import aiRoutes from './routes/aiRoutes.js';
 
 // 🚀 NAYA: Error Middleware Import Kiya
 import { errorMiddleware } from './middlewares/errorMiddleware.js';
+import { ensureAdminUser } from './controllers/adminController.js';
 
 dotenv.config();
-connectDB();
+connectDB().then(ensureAdminUser).catch((error) => console.error('Admin bootstrap failed:', error.message));
 
 const app = express();
+app.locals.models = { Course, Lesson };
 
 // Database connection ensure karne wala middleware (Vercel serverless cold starts ke liye)
 app.use(async (req, res, next) => {
     try {
-        if (!mongoose.connection || mongoose.connection.readyState !== 1) {
+        if (mongoose.connection.readyState !== 1) {
             await connectDB();
         }
+        await ensureAdminUser();
         next();
     } catch (err) {
         next(err);
@@ -74,7 +81,7 @@ if (process.env.VERCEL) {
 
 // Health check API
 app.get('/api/v1/health', (req, res) => {
-    res.status(200).json({ status: 'API is running nicely!' });
+    res.status(200).json({ status: 'ATs Learning API is running nicely!' });
 });
 
 // --- ROUTES USE ---
@@ -89,10 +96,12 @@ app.use('/api/v1/chapters', chapterRoutes);
 // 🚀 NAYA: Enrollment routes (requirement spelling 'enrollement' + correct 'enrollment' dono)
 app.use('/api/v1/enrollement', enrollmentRoutes);
 app.use('/api/v1/enrollment', enrollmentRoutes);
+app.use('/api/v1/ai', aiRoutes);
+app.use('/api/v1/admin', adminRoutes);
 
 // 🚀 NAYA: Root level health check (Requirement: GET /health)
 app.get('/health', (req, res) => {
-    res.status(200).json({ status: 'EduVerse API is running nicely!', uptime: process.uptime() });
+    res.status(200).json({ status: 'ATs Learning API is running nicely!', uptime: process.uptime() });
 });
 
 // ==========================================

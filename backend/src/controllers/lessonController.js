@@ -7,7 +7,7 @@ import path from 'path';
 // 1. Course aur Chapter ke andar naya Lesson (Video/URL/File) add karna
 export const addLesson = async (req, res) => {
     try {
-        const { title, courseId, chapterId, videoUrl, theoryContent, order } = req.body;
+        const { title, courseId, chapterId, videoUrl, theoryContent, order, topic, liveLink, liveTime } = req.body;
 
         if (!title || !courseId) {
             return res.status(400).json({ message: "Title and Course ID are required" });
@@ -40,7 +40,10 @@ export const addLesson = async (req, res) => {
             courseId,
             chapterId: chapterId || null, // Chapter ID save karna
             videoUrl,
-            videoFile: videoFileName,     // Video ka naam save karna
+            topic,                          // 📺 Quiz isi topic se banegi
+            liveLink,                       // 🔴 Live class ka Meet/Zoom link
+            liveTime,                       // 🔴 Kab hoti hai live class
+            videoFile: videoFileName,       // Video ka naam save karna
             theoryContent,
             attachment: attachmentFileName, // Notes/PDF ka naam save karna
             order: order || 1
@@ -160,7 +163,7 @@ export const updateLesson = async (req, res) => {
         const lectureId = req.params.lectureId || req.body.lectureId;
         const updateFields = {};
 
-        ['title', 'videoUrl', 'theoryContent', 'chapterId', 'order', 'courseId'].forEach(field => {
+        ['title', 'videoUrl', 'theoryContent', 'chapterId', 'order', 'courseId', 'topic', 'liveLink', 'liveTime'].forEach(field => {
             if (req.body[field] !== undefined && req.body[field] !== '') updateFields[field] = req.body[field];
         });
 

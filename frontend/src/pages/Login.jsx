@@ -5,6 +5,8 @@ import toast from 'react-hot-toast';
 import api from '../utils/api';
 import Header from '../components/Header.jsx';
 
+const getRoleHome = user => user?.role === 'admin' ? '/admin-dashboard' : (user?.role === 'teacher' ? '/teacher-dashboard' : '/student-dashboard');
+
 const Login = () => {
     const [formData, setFormData] = useState({ email: '', password: '' });
     const [loading, setLoading] = useState(false);
@@ -13,7 +15,7 @@ const Login = () => {
 
     // 🚀 Agar session pehle se active hai (7-day cookie) toh login page ki jagah dashboard dikhao
     if (sessionChecked && user) {
-        return <Navigate to={user.role === 'teacher' ? '/teacher-dashboard' : '/student-dashboard'} replace />;
+        return <Navigate to={getRoleHome(user)} replace />;
     }
 
     const handleChange = (e) => {
@@ -29,12 +31,7 @@ const Login = () => {
                 setUser(response.data.user);
                 toast.success("Login successful!");
                 
-                // Role ke hisaab se redirect karna
-                if (response.data.user.role === 'teacher') {
-                    navigate('/teacher-dashboard');
-                } else {
-                    navigate('/student-dashboard');
-                }
+                navigate(getRoleHome(response.data.user));
             }
         } catch (error) {
             toast.error(error.response?.data?.message || "Login failed. Please try again.");
@@ -48,7 +45,7 @@ const Login = () => {
             <Header />
             <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
                 <div className="dashboard-card" style={{ width: '100%', maxWidth: '400px', padding: '30px' }}>
-                    <h2 style={{ textAlign: 'center', marginBottom: '10px' }}>EduVerse</h2>
+                    <h2 style={{ textAlign: 'center', marginBottom: '10px' }}>ATs Learning</h2>
                     <p style={{ textAlign: 'center', color: 'var(--text-muted)', marginBottom: '20px' }}>Please login to your account</p>
                 
                 <form onSubmit={handleSubmit}>

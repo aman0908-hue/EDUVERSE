@@ -1,6 +1,127 @@
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import api from '../utils/api.js';
+import { Sparkles, Wand2 } from 'lucide-react';
+
+/**
+ * 🤖 AI Quiz Generator (teacher-only)
+ *
+ * Do tarah ka quiz bana sakta hai:
+ *  1. lessonId diya  → usi lesson/topic ka quiz
+ *  2. courseId diya  → poore course ka FINAL quiz (exam)
+ *
+ * AI key na ho to bhi kaam karta hai — lesson ke notes se offline questions ban jate hain.
+ */
+const AIQuizGenerator = ({ lessonId, courseId, topic = '', onQuestionsGenerated, compact = false }) => {
+    const [count, setCount] = useState(5);
+    const [difficulty, setDifficulty] = useState('medium');
+    const [customTopic, setCustomTopic] = useState(topic);
+    const [loading, setLoading] = useState(false);
+    const [result, setResult] = useState(null);
+
+    const isCourseQuiz = !lessonId && Boolean(courseId);
+
+    const handleGenerate = async () => {
+        setLoading(true);
+        setResult(null);
+        try {
+            const payload = { count: Number(count), difficulty };
+            if (lessonId) payload.lessonId = lessonId;
+            else payload.courseId = courseId;
+            // Teacher topic badal sakta hai (default: lesson ka topic)
+            if (customTopic.trim()) payload.topic = customTopic.trim();
+
+            const response = await api.post('/quizzes/generate', payload);
+            setResult(response.data);
+            toast.success(response.data.message || 'Quiz generate ho gaya!');
+            onQuestionsGenerated?.(response.data.quizzes || []);
+        } catch (error) {
+            toast.error(error.response?.data?.message || 'Quiz generate nahi ho paya');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return (
+        <div style={{
+            marginTop: compact ? '10px' : '15px',
+            padding: compact ? '12px' : '16px',
+            background: 'linear-gradient(135deg, #f5f3ff 0%, #eef2ff 100%)',
+            border: '1px solid #c4b5fd',
+            borderRadius: '10px'
+        }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                <Wand2 size={16} color="#7c3aed" />
+                <strong style={{ color: '#5b21b6', fontSize: '0.95rem' }}>
+                    {isCourseQuiz ? '🏆 Final Course Quiz (AI se banao)' : '🤖 Is topic ka quiz AI se banao'}
+                </strong>
+            </div>
+            <p style={{ fontSize: '0.8rem', color: '#6b7280', margin: '0 0 12px 0' }}>
+                {isCourseQuiz
+                    ? 'Poore course ke sab lessons ke notes se final exam ban jayega.'
+                    : 'Lesson ke notes padh kar questions banayenge. Aap phir se edit bhi kar sakte ho.'}
+            </p>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
+                <div>
+                    <label style={{ fontSize: '0.75rem', fontWeight: '600', color: '#4b5563' }}>Kitne questions?</label>
+                    <select value={count} onChange={e => setCount(e.target.value)} className="form-control">
+                        {[3, 5, 8, 10, 15, 20].map(n => <option key={n} value={n}>{n}</option>)}
+                    </select>
+                </div>
+                <div>
+                    <label style={{ fontSize: '0.75rem', fontWeight: '600', color: '#4b5563' }}>Level</label>
+                    <select value={difficulty} onChange={e => setDifficulty(e.target.value)} className="form-control">
+                        <option value="easy">Easy</option>
+                        <option value="medium">Medium</option>
+                        <option value="hard">Hard</option>
+                    </select>
+                </div>
+            </div>
+
+            <input
+                type="text"
+                value={customTopic}
+                onChange={e => setCustomTopic(e.target.value)}
+                className="form-control"
+                placeholder={isCourseQuiz ? 'Course name (optional)' : 'Topic (optional) — chhod do to lesson ka topic use hoga'}
+                style={{ marginBottom: '10px' }}
+            />
+
+            <button
+                onClick={handleGenerate}
+                disabled={loading}
+                className="btn btn-primary"
+                style={{
+                    width: '100%',
+                    background: loading ? '#a78bfa' : '#7c3aed',
+                    borderColor: loading ? '#a78bfa' : '#7c3aed'
+                }}
+            >
+                <Sparkles size={15} style={{ marginRight: '6px' }} />
+                {loading ? 'Ban raha hai... (10-20 sec)' : 'AI se Quiz Banao'}
+            </button>
+
+            {result && (
+                <div style={{
+                    marginTop: '12px', padding: '10px', background: '#fff',
+                    borderRadius: '8px', border: '1px solid #ddd6fe', fontSize: '0.8rem'
+                }}>
+                    ✅ <strong>{result.quizzes?.length || 0} questions</strong> add ho gaye
+                    {result.topic ? <> — topic: <em>{result.topic}</em></> : null}
+                    <div style={{ marginTop: '6px', color: '#6b7280' }}>
+                        {result.mode === 'ai'
+                            ? 'AI Gemini/OpenAI se bane'
+                            : 'Offline mode (notes se bane) — AI key nahi hai'}
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+};
+
+// AIQuizGenerator named export (default export neeche QuizBuilder hai)
+export { AIQuizGenerator };
 
 // 🚀 Reusable Quiz Builder (Requirement: components/QuizBuilder)
 // Teacher kisi bhi lecture ke liye quiz questions add/delete kar sakta hai

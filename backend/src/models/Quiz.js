@@ -4,8 +4,25 @@ const quizSchema = new mongoose.Schema({
     lessonId: { 
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'Lesson', 
-        required: true 
+        // Ab optional hai — pure course ka final quiz lesson se juda nahi hota
+        default: null
     },
+    // 🏆 Final course quiz — courseId se course-wide quiz banaya ja sakta hai
+    courseId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Course',
+        default: null
+    },
+    // 📋 Quiz ka type — 'lesson' (topic quiz) ya 'course' (final exam)
+    scope: {
+        type: String,
+        enum: ['lesson', 'course'],
+        default: 'lesson'
+    },
+    // 📺 Topic jiske basis par quiz generate hua
+    topic: { type: String, default: '' },
+    // Quiz ka apna title (final exam ke liye zaroori hai)
+    quizTitle: { type: String, default: '' },
     questionText: { 
         type: String, 
         required: true 

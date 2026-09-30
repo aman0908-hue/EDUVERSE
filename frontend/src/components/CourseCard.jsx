@@ -1,10 +1,11 @@
 import { Link } from 'react-router-dom';
+import { assetUrl } from '../utils/api.js';
 
 // 🚀 Reusable Course Card (Requirement: components/CourseCard)
 // Home, Courses aur Dashboard — jagah jagah use hoga
 const CourseCard = ({ course, children }) => {
     const thumbnailUrl = course.thumbnail
-        ? `${import.meta.env.VITE_API_URL}/uploads/${course.thumbnail}`
+        ? assetUrl(course.thumbnail)
         : null;
 
     return (

@@ -100,7 +100,7 @@ const TeacherDashboard = () => {
                                             to={`/edit-course/${course._id}`} 
                                             className="btn btn-outline" 
                                             style={{ flex: 1, padding: '8px 10px', fontSize: '0.9rem', textDecoration: 'none', textAlign: 'center' }}>
-                                            Edit / Add Videos
+                                            Edit / Add Videos →
                                         </Link>
                                         
                                         <button 

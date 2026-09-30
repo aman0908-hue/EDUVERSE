@@ -2,7 +2,11 @@ import { useState, useEffect, useContext } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { UserContext } from '../context/UserContext'; // 🚀 Context import kiya
 import toast from 'react-hot-toast';
-import api from '../utils/api.js';
+import api, { assetUrl, apiOrigin } from '../utils/api.js';
+import StudyAssistant from '../components/StudyAssistant.jsx';
+// NOTE: intentionally aliased as ClassTimetable so that every existing
+// <ClassTimetable /> usage in the pages is gated without touching those files.
+import ClassTimetable from '../components/GatedClassTimetable.jsx';
 
 // YouTube Fix
 const getYouTubeEmbedUrl = (url) => {
@@ -205,10 +209,10 @@ const LearningPage = () => {
     };
 
     return (
-        <div style={{ display: 'flex', height: '100vh', backgroundColor: 'var(--bg-color)', overflow: 'hidden' }}>
+        <div className="learning-shell" style={{ display: 'flex', height: '100vh', backgroundColor: 'var(--bg-color)', overflow: 'hidden' }}>
             
             {/* LEFT SIDEBAR */}
-            <div style={{ width: '300px', backgroundColor: 'white', borderRight: '1px solid #e5e7eb', display: 'flex', flexDirection: 'column' }}>
+            <div className="learning-sidebar" style={{ width: '300px', backgroundColor: 'white', borderRight: '1px solid #e5e7eb', display: 'flex', flexDirection: 'column' }}>
                 <div style={{ padding: '20px', borderBottom: '1px solid #e5e7eb', backgroundColor: '#f8fafc' }}>
                     <Link to="/student-dashboard" style={{ color: '#4f46e5', textDecoration: 'none', fontSize: '0.9rem', fontWeight: 'bold' }}>
                         ← Back to Dashboard
@@ -222,9 +226,28 @@ const LearningPage = () => {
                     </p>
                 </div>
 
+                {/* 📅 Timetable — student padhte hue hi next class dikh jaaye */}
+                {course?.schedule?.length > 0 && (
+                    <div className="learning-schedule" style={{ borderBottom: '1px solid #e5e7eb', backgroundColor: '#f8fafc' }}>
+                        <ClassTimetable schedule={course.schedule} note={course.scheduleNote} showGrid={false} />
+                    </div>
+                )}
+
                 <div style={{ flex: 1, overflowY: 'auto', padding: '10px' }}>
                     {modules.length === 0 && lessons.length === 0 ? (
-                        <p style={{ padding: '20px', color: '#6b7280', fontSize: '0.9rem' }}>No content available yet.</p>
+                        <div style={{ padding: '24px 16px', textAlign: 'center' }}>
+                            <div style={{ fontSize: '2.2rem', marginBottom: '8px' }}>📭</div>
+                            <p style={{ color: '#374151', fontSize: '0.95rem', fontWeight: 'bold', margin: '0 0 8px 0' }}>
+                                Abhi koi lesson nahi hai
+                            </p>
+                            <p style={{ color: '#6b7280', fontSize: '0.85rem', margin: '0 0 12px 0', lineHeight: '1.6' }}>
+                                Teacher ne abhi video ya notes add nahi kiye hain.
+                                Jaise hi content add hoga, yahan sab dikhne lagega.
+                            </p>
+                            <p style={{ color: '#9ca3af', fontSize: '0.78rem', margin: 0 }}>
+                                Course: {course?.title || '—'}
+                            </p>
+                        </div>
                     ) : (
                         <>
                             {modules.map((mod, mIndex) => (
@@ -275,7 +298,7 @@ const LearningPage = () => {
             </div>
 
             {/* RIGHT MAIN CONTENT */}
-            <div style={{ flex: 1, overflowY: 'auto', backgroundColor: '#f9fafb' }}>
+            <div className="learning-main" style={{ flex: 1, overflowY: 'auto', backgroundColor: '#f9fafb' }}>
                 {!currentLesson ? (
                     <div style={{ display: 'flex', height: '100%', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', color: '#6b7280' }}>
                         <span style={{ fontSize: '4rem' }}>🎓</span>
@@ -283,19 +306,19 @@ const LearningPage = () => {
                         <p>Select a video from the sidebar to start learning.</p>
                     </div>
                 ) : (
-                    <div style={{ maxWidth: '900px', margin: '0 auto', padding: '30px 20px' }}>
+                    <div className="learning-content" style={{ maxWidth: '900px', margin: '0 auto', padding: '30px 20px' }}>
                         <div style={{ backgroundColor: 'black', width: '100%', aspectRatio: '16/9', borderRadius: '12px', overflow: 'hidden', marginBottom: '20px', boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)' }}>
                             {currentLesson.videoFile ? (
                                 /* 🚀 REQUIREMENT: Chunked streaming (HTTP Range / 206) protected endpoint
                                    crossOrigin="use-credentials" se video tag cookie bhejta hai */
                                 <video
                                     crossOrigin="use-credentials"
-                                    src={`${import.meta.env.VITE_API_URL}/api/v1/lessons/video/stream/${currentLesson._id}`}
+                                    src={`${apiOrigin}/api/v1/lessons/video/stream/${currentLesson._id}`}
                                     onError={(e) => {
                                         // Fallback: agar stream fail ho jaye toh static file try karo
                                         if (!e.target.dataset.fallback) {
                                             e.target.dataset.fallback = 'true';
-                                            e.target.src = `${import.meta.env.VITE_API_URL}/uploads/${currentLesson.videoFile}`;
+                                            e.target.src = assetUrl(currentLesson.videoFile);
                                         }
                                     }}
                                     controls autoPlay style={{ width: '100%', height: '100%' }} controlsList="nodownload" />
@@ -307,6 +330,40 @@ const LearningPage = () => {
                                 </div>
                             )}
                         </div>
+
+                        {/* 🔴 LIVE CLASS — teacher ka Google Meet/Zoom link + time */}
+                        {currentLesson.liveLink && (
+                            <div style={{ background: 'linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%)', padding: '18px 20px', borderRadius: '10px', border: '1px solid #fecaca', marginBottom: '20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '15px', flexWrap: 'wrap' }}>
+                                <div>
+                                    <div style={{ fontSize: '1rem', fontWeight: 'bold', color: '#991b1b', marginBottom: '3px' }}>
+                                        🔴 Live Class Available
+                                    </div>
+                                    <div style={{ fontSize: '0.82rem', color: '#7f1d1d' }}>
+                                        {currentLesson.liveTime
+                                            ? `Scheduled: ${currentLesson.liveTime}`
+                                            : 'Click below to join the live class.'}
+                                    </div>
+                                </div>
+                                <a
+                                    href={currentLesson.liveLink}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="btn btn-primary"
+                                    style={{ textDecoration: 'none', backgroundColor: '#dc2626', color: 'white', borderColor: '#dc2626', padding: '10px 22px', fontWeight: 'bold' }}
+                                >
+                                    🔴 Join Live Class
+                                </a>
+                            </div>
+                        )}
+
+                        {/* 📺 TOPIC — is lesson me kya padhaya */}
+                        {currentLesson.topic && (
+                            <div style={{ background: '#eef2ff', padding: '12px 16px', borderRadius: '8px', border: '1px solid #c7d2fe', marginBottom: '20px' }}>
+                                <span style={{ fontSize: '0.85rem', color: '#3730a3' }}>
+                                    <strong>📺 Topic:</strong> {currentLesson.topic}
+                                </span>
+                            </div>
+                        )}
 
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '20px', gap: '10px', flexWrap: 'wrap' }}>
                             <h1 style={{ margin: 0, color: '#111827', fontSize: '1.8rem' }}>{currentLesson.title}</h1>
@@ -324,7 +381,7 @@ const LearningPage = () => {
                                     {completedLessons.includes(currentLesson._id) ? '✅ Completed — Mark Incomplete' : 'Mark as Complete ✓'}
                                 </button>
                                 {currentLesson.attachment && (
-                                    <a href={`${import.meta.env.VITE_API_URL}/uploads/${currentLesson.attachment}`} target="_blank" rel="noreferrer" className="btn btn-outline" style={{ textDecoration: 'none', backgroundColor: 'white', color: '#4f46e5', borderColor: '#4f46e5' }}>
+                                    <a href={assetUrl(currentLesson.attachment)} target="_blank" rel="noreferrer" className="btn btn-outline" style={{ textDecoration: 'none', backgroundColor: 'white', color: '#4f46e5', borderColor: '#4f46e5' }}>
                                         📎 Download Notes
                                     </a>
                                 )}
@@ -337,6 +394,8 @@ const LearningPage = () => {
                                 <p style={{ color: '#4b5563', whiteSpace: 'pre-wrap', lineHeight: '1.6' }}>{renderNotesWithLinks(currentLesson.theoryContent)}</p>
                             </div>
                         )}
+
+                        <StudyAssistant course={course} lesson={currentLesson} courseId={id} />
 
                         {quizzes.length > 0 && (
                             <div style={{ backgroundColor: '#fffbeb', padding: '25px', borderRadius: '8px', border: '1px solid #fde68a' }}>
